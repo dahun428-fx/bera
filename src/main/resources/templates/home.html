@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+<title>베스킨라빈스 카피프로젝트</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/main.css" />	
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<div class="wrap" id="app">
+		<div class="header">
+			<div class="container-fluid" style="height: 200px; border: 1px solid black;">
+				<div class="d-flex justify-content-sm-around">
+					<div class="sns-logo"></div>
+					<div class="brand-logo"></div>
+					<div class="search-logo"></div>
+				</div>
+			</div>
+		</div>
+		<div class="navi" @mouseenter="show" @mouseleave="fade" style="border: 1px solid gray">
+			<div class="container-fluid">
+				<div class="row">
+
+					<div class="col-1">
+						<a href="#" class="nav-link">LOGIN</a>
+					</div>
+					<div class="col-1">
+						<a href="#" class="nav-link">JOIN</a>
+					</div>
+
+					<div class="col-9">
+						
+						<ul class="nav justify-content-end list-unstyled" id="custom-nav">
+							<li class="nav-item" style="width: 400px;"><a class="nav-link" href="#">FLAVOR
+									OF THE MONTH</a>
+							<transition name="slide">
+								<div class="nav-sub" v-if="showNavi" style="height: 200px;">
+									<div class="nav-sub-menu">
+										<a href="#"> <img src="#" alt="" />exmple img</a>
+									</div>
+								</div>
+							</transition>
+							</li>
+							<li class="nav-item" style="width: 250px;"><a
+								class="nav-link" href="#">MENU</a>
+							<transition name="slide">
+								<div class="nav-sub" v-if="showNavi">
+									<ul class="nav-sub-menu list-unstyled">
+										<li class="m-3"><a href="#">아이스크림</a></li>
+										<li class="m-3"><a href="#">아이스크림 케이크</a></li>
+									</ul>
+								</div>
+							</transition>
+							</li>
+							<li class="nav-item" style="width: 250px;"><a
+								class="nav-link" href="#">EVENT</a>
+							<transition name="slide">	
+								<div class="nav-sub" v-if="showNavi">
+									<ul class="nav-sub-menu list-unstyled">
+										<li class="m-3"><a href="#">진행중인 이벤트</a></li>
+										<li class="m-3"><a href="#">종료된 이벤트</a></li>
+									</ul>
+								</div>
+							</transition>	
+							</li>
+							<li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						<div class="event-collapse">
+						
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="event-list"></div>
+					</div>
+					<div class="col-12">
+						<div class="product-list"></div>
+					</div>
+					<div class="col-12">
+						<div class="find-store"></div>
+					</div>
+					<div class="col-12">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<div class="sns-logo-content"></div>
+								</div>
+								<div class="col-12">
+									<div class="bera-instagram-list"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		
+		</div>
+		<div class="footer"></div>
+	</div>
+	<script src="/static/js/main.js"></script>
+</body>
+</html>
