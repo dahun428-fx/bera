@@ -4,7 +4,8 @@
 var app = new Vue({
 	el:"#app",
 	data:{
-		showNavi:false
+		showNavi:false,
+		events:[1,2,3,4]
 	},
 	methods:{
 		show:function(){

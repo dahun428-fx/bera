@@ -22,7 +22,7 @@
 }
 
 .slide-enter-to, .slide-leave {
-   max-height: 250px;
+   max-height: 300px;
    overflow: hidden;
 }
 
@@ -30,3 +30,18 @@
    overflow: hidden;
    max-height: 0;
 }
+.header {
+	background-color: #FDF5E6;
+}
+.brand-logo img {
+	width: 125px;
+	height: 125px;
+	margin-top: 2rem;
+}
+.event-list {
+	margin-top: 100px;
+}
+.footer{
+	height: 300px;
+}
+
