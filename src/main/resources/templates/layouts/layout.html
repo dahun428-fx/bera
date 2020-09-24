@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title>베스킨라빈스 카피프로젝트</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/main.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<header th:replace="fragments/header :: headerFragment"></header>
+<nav th:replace="fragments/navi :: naviFragment"></nav>
+<div layout:fragment="body"></div>
+<footer th:replace="fragments/footer :: footerFragment"></footer>
+<script src="/static/js/main.js"></script>
+</html>

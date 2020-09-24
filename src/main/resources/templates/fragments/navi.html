@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="naviFragment" id="navi">
+	<div class="navi" @mouseenter="show" @mouseleave="fade"
+		style="border: 1px solid gray">
+		<div class="container-fluid">
+			<div class="row">
+
+				<div class="col-1">
+					<a href="#" class="nav-link">LOGIN</a>
+				</div>
+				<div class="col-1">
+					<a href="#" class="nav-link">JOIN</a>
+				</div>
+
+				<div class="col-9">
+
+					<ul class="nav justify-content-end list-unstyled" id="custom-nav">
+						<li class="nav-item" style="width: 400px;"><a
+							class="nav-link" href="#">FLAVOR OF THE MONTH</a> <transition
+								name="slide">
+							<div class="nav-sub" v-if="showNavi" style="height: 280px;">
+								<div class="nav-sub-menu">
+									<a href="#"> <img src="/static/img/main/event_ice.jpg"
+										alt="" /></a>
+								</div>
+							</div>
+							</transition></li>
+						<li class="nav-item" style="width: 250px;"><a
+							class="nav-link" href="#">MENU</a> <transition name="slide">
+							<div class="nav-sub" v-if="showNavi">
+								<ul class="nav-sub-menu list-unstyled">
+									<li class="m-3"><a href="#">아이스크림</a></li>
+									<li class="m-3"><a href="#">아이스크림 케이크</a></li>
+								</ul>
+							</div>
+							</transition></li>
+						<li class="nav-item" style="width: 250px;"><a
+							class="nav-link" href="#">EVENT</a> <transition name="slide">
+							<div class="nav-sub" v-if="showNavi">
+								<ul class="nav-sub-menu list-unstyled">
+									<li class="m-3"><a href="#">진행중인 이벤트</a></li>
+									<li class="m-3"><a href="#">종료된 이벤트</a></li>
+								</ul>
+							</div>
+							</transition></li>
+						<li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+</html>

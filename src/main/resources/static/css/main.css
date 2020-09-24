@@ -38,6 +38,22 @@
 	height: 125px;
 	margin-top: 2rem;
 }
+.ice-img-card {
+	height: 150px;
+	overflow: hidden;
+}
+.ice-img-top {
+	width: 125px;
+	position: relative;
+	z-index: 1;
+	margin: 0 auto;
+}
+.ice-img-bottom {
+	position: relative;
+	width: 60px;
+	top: -60px;
+	margin: 0 auto;
+}
 .event-list {
 	margin-top: 100px;
 }

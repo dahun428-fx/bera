@@ -1,11 +1,10 @@
 /**
  * 
  */
-var app = new Vue({
-	el:"#app",
+var navi = new Vue({
+	el:"#navi",
 	data:{
 		showNavi:false,
-		events:[1,2,3,4]
 	},
 	methods:{
 		show:function(){
@@ -17,4 +16,12 @@ var app = new Vue({
 		}
 	},
 	
+})
+var main = new Vue({
+	el:"#main",
+	data:{
+		icecreams:[1,2,3,4,5,6],
+		events:[1,2,3,4]
+	}
+
 })
