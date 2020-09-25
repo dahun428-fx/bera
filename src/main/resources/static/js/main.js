@@ -25,3 +25,15 @@ var main = new Vue({
 	}
 
 })
+var loginApp = new Vue({
+
+	el:"#loginApp",
+	data:{
+		user:{}
+	},
+	methods:{
+		login:function(){
+			
+		}
+	}
+})
