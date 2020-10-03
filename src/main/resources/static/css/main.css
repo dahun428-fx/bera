@@ -60,4 +60,42 @@
 .footer{
 	height: 300px;
 }
-
+.error-box{
+	border: 1px solid red;
+}
+.error-text{
+	color: red;
+}
+.color-pink{
+	color: #ff69b4;
+}
+.color-pink i{
+	color: #ff69b4;
+}
+.color-gray-pink{
+	color: #B86824;
+}
+.login-btn {
+	height: 100px;
+	width: 100px;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	color: #ff69b4;
+	text-decoration: none;
+	background-color: #ff69b4;
+	color: white;
+	border-style: none;
+}
+hr {
+	color: #ff69b4;
+	background-color: #ff69b4;
+	border-color: #ff69b4;
+}
+.custom-box-wrap{
+	width: 600px;
+	margin: 0 auto;
+	margin-bottom: 2rem;
+	margin-top:2rem;
+	border-radius: 0.3rem;
+}

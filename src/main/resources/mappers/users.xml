@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.UserDao">
+
+	<select id="getUser" parameterType="map" resultType="com.example.demo.vo.User">
+		SELECT
+			user_id			AS id,
+			user_name 		AS `name`,
+			user_password	AS `password`,
+			user_point		AS `point`,
+			user_email		AS 'email',
+			deleted,
+			admin,
+			reg_date,
+			user_phone 		AS phone
+		FROM 
+			br_users
+		<choose>
+			<when test="query != null and query == 'login' ">
+				WHERE
+					user_id = #{user.id}
+				AND
+					user_password = #{user.password}
+			</when>
+			<when test="query != null and query == 'getUserById' ">
+				WHERE
+					user_id = #{userId}
+			</when>
+			<when test="query != null and query == 'getUserByEmail' ">
+				WHERE
+					user_id = #{email}
+			</when>
+			
+		</choose>
+
+	
+	</select>
+	<select id="getUserRolesByUserId" parameterType="string" resultType="com.example.demo.vo.UserRole">
+		
+		SELECT
+			user_id 		as id,
+			role_name 		as roleName
+		FROM 
+			br_userRoles
+		WHERE
+			user_id = #{value}
+	</select>
+	
+	<insert id="insertUser" parameterType="com.example.demo.vo.User">
+		INSERT INTO br_users
+		(user_id, user_name, user_password, user_email, user_phone)
+		VALUES
+		(#{id}, #{name}, #{password}, #{email}, #{phone})
+	</insert>
+	<insert id="insertUserRole">
+		
+		INSERT INTO br_userRoles
+		(user_id, role_name)
+		VALUES
+		(#{userId}, #{roleName})
+	
+	</insert>
+	
+	
+	
+	
+</mapper>

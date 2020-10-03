@@ -2,7 +2,7 @@
 <html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layouts/layout}">
-<div layout:fragment="body" class="body" id="loginApp">
+<div layout:fragment="body" class="body mt-5" id="loginApp">
 	<div class="container">
 		<div class="content-header text-center">
 			<h1 class="display-4">LOGIN</h1>
@@ -15,26 +15,37 @@
 			<div class="title text-center">
 				<h5>베스킨라빈스 로그인</h5>
 				<p>해피포인트 아이디로 간편하게 로그인 하세요</p>
+				<p class="error-text" v-if="hasError">{{errorMsg}}</p>
+				<p class="error-text" th:if=${param.error}
+									th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+									아이디나 비밀번호가 올바르지 않습니다.
+				</p>
+			
 			</div>
 			<!-- login form start -->
 			<div class="custom-box-wrap">
 				<div class="custom-box">
-					<form>
+					<form id="loginForm" method="post" action="/login" @submit.prevent="loginAction(user)">
+						 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 						<div class="row">
 							<div class="col-8">
 								<div class="form-group">
-									<input type="text" name="id" class="form-control"
+									<input type="text" name="username" class="form-control"
 										placeholder="아이디를 입력하세요"
-										v-model="user.id" />
+										v-model="user.id"
+										:class="{'error-box':hasUserId}" 
+										@click="clearFormId"/>
 								</div>
 								<div class="form-group">
-									<input type="password" name="pwd" class="form-control"
+									<input type="password" name="password" class="form-control"
 										placeholder="비밀번호를 입력하세요" 
-										v-model="user.pw"/>
+										v-model="user.password"
+										:class="{'error-box':hasUserPw}"
+										@click="clearFormPw"/>
 								</div>
 							</div>
 							<div class="col-4">
-								<button class="login-btn" type="submit">로그인</button>
+								<button class="login-btn" type="submit" >로그인</button>
 							</div>
 						</div>
 					</form>
@@ -44,5 +55,7 @@
 		</div>
 	</div>
 </div>
-
+<th:block layout:fragment="script">
+<script src="/static/js/login.js"></script>
+</th:block>
 </html>

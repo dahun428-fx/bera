@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body mt-5" id="productApp">
+
+            <div class="list-banner">
+                <!-- 카테고리에 따라서 배너 이미지 바꾸기 -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <img class="list-banner-img" src="../image/<%="ICECREAM".equals(cat) ? "list-banner-img-cream.jpg" : "list-banner-img-cake.jpg"%>" alt="" />
+                    </div>
+                </div>
+                <!-- banner end -->
+            </div>
+            <div class="container">
+
+                <div class="row">
+                    <!-- monthly best item -->
+                    <div class="col-12">
+                        <!-- 카테고리가 ice cream 일경우에만 best item 뜨게 만들기 -->
+                        <h4 class="display-4 text-center">BEST ITEM</h4>
+                        <hr />
+                        <div class="row">
+
+                            <div class="col-2 text-center">
+                                <span class="badge badge-pill badge-info">위</span>
+                                <!-- product-detail-page-move -->
+                                <a href="detail.jsp?productNo=<%=product.getNo()%>">
+                                    <!-- product-detail-page-move --> <img class="img-thumbnail" src="../image/<%=cat %>/<%=product.getImagePath()%>" alt="" />
+                                </a>
+                                <div class="title text-center">
+                                    <p>
+                                        <!-- product-detail-page-move -->
+                                        <a href="detail.jsp?productNo=<%=product.getNo()%>"><%=product.getName()%></a>
+                                        <!-- product-detail-page-move -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- monthly best item -->
+                    <div class="col-12 br-event-container">
+                        <!-- category name -->
+                        <h4 class="display-4 text-center"></h4>
+                        <!-- category name end -->
+                        <hr />
+                        <!-- product list -->
+                        <div class="row custom-content-box" id="product-list">
+                            <!-- product -->
+
+                            <!-- product -->
+
+                        </div>
+                        <ul class="pagination justify-content-center" id="pageBar" style="margin: 20px 0">
+                        </ul>
+                        <!-- product list -->
+                    </div>
+                </div>
+                <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="col-1-sm">
+                        <a href="/admin/addForm" class="btn btn-primary">상품 등록</a>
+                    </div>
+                </div>
+            </div>
+        </div>

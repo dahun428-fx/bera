@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body mt-5" id="joinApp">
+	<div class="container">
+			
+				<div class="content-header text-center">
+					<h1 class="display-4">JOIN</h1>
+					<p>
+						<strong>회원등록 페이지 입니다.</strong>
+					</p>
+				</div>
+				<div class="custom-content-box">
+					<hr />
+					<div class="title text-center">
+						<h5>베스킨라빈스 회원가입</h5>
+						<p>회원등록을 하셔서 다양한 혜택을 만나보세요</p>
+					</div>
+					<!-- join form start -->
+					<div class="custom-box-wrap">
+						<div class="custom-box">
+							<form>
+								<table class="table table-bordered">
+									<tbody>
+										<tr>
+											<td>이름</td>
+											<td>
+												<div class="form-group">
+													<input type="text" class="form-control" v-model="user.name"
+													:class="{'error-box':errorList.nameError}"
+													placeholder="한글만 입력가능합니다."/>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>아이디</td>
+											<td>
+												<div class="form-group">
+													<input name="id" type="text" class="form-control" v-model="user.id"
+													:class="{'error-box':errorList.idError}"
+													placeholder="4 ~ 12글자 영어, 숫자만 입력가능합니다."/>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>비밀번호</td>
+											<td>
+												<div class="form-group">
+													<input name="pwd" type="password" class="form-control" 
+													v-model="user.password"/>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>비밀번호 확인</td>
+											<td>
+												<div class="form-group">
+													<input name="pwd-chk" type="password" class="form-control" 
+													v-model="user.passwordCheck"
+													/>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>전화번호</td>
+											<td>
+												<div class="form-group">
+													<input name="phone" type="text" maxlength="11" class="form-control"
+													 placeholder="하이픈을 제외한 숫자만 입력해주세요"
+													 v-model="user.phone"
+													 v-on:keyup="keyupFunction(user.phone)"
+													 />
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>이메일</td>
+											<td>
+												<div class="form-group">
+													<input name="email" type="text" class="form-control" 
+													v-model="user.email" />
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<div class="form-group">
+													<input id="userAgree" type="checkbox" name="userAgree" v-model="user.agreeCheckBox"
+														> <label for="userAgree"><small>이용약관
+															및 개인정보 처리 방침에 동의합니다.</small></label>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row">
+									<div class="col-6 text-left">
+										<span class="error-text" v-if="hasError">{{errorMsg}}</span>
+									</div>
+									<div class="col-6 text-right">									
+										<button type="button" class="btn btn-primary" @click="joinAction(user)">회원가입</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- join form end -->
+				</div>
+			</div>
+		</div>
+<th:block layout:fragment="script">
+<script src="/static/js/join.js"></script>
+</th:block>
+</html>

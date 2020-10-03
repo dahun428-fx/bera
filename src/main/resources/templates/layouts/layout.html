@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 <head>
 <title>베스킨라빈스 카피프로젝트</title>
 <meta charset="utf-8">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<!-- default header name is X-CSRF-TOKEN -->
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -11,9 +15,12 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+<body>
 <header th:replace="fragments/header :: headerFragment"></header>
 <nav th:replace="fragments/navi :: naviFragment"></nav>
 <div layout:fragment="body"></div>
 <footer th:replace="fragments/footer :: footerFragment"></footer>
-<script src="/static/js/main.js"></script>
+<script src="/static/js/navi.js"></script>
+<th:block layout:fragment="script"></th:block>
+</body>
 </html>

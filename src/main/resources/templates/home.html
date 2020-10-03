@@ -2,7 +2,6 @@
 <html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layouts/layout}">
-	
 <div layout:fragment="body" class="body" id="main">
 	<div class="content">
 		<div class="container-fluid">
@@ -113,4 +112,7 @@
 
 	</div>
 </div>
+<th:block layout:fragment="script">
+<script src="/static/js/main.js"></script>
+</th:block>
 </html>

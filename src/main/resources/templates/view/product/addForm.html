@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body mt-5" id="productApp">
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				<div class="d-flex justify-content-between">
+					<span class="h5 text-primary font-weight-bold">상품 전체조회</span>
+					<button class="btn btn-primary btn-sm text-right" type="button"
+						@click="toggleForm()">상품등록</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<table class="table table-hover">
+					<thead class="bg-dark text-white">
+						<tr>
+							<td>상품번호</td>
+							<td>상품이름</td>
+							<td>카테고리</td>
+							<td>수량</td>
+							<td>가격</td>
+							<td>할인가격</td>
+							<td>포인트</td>
+							<td>등록일</td>
+							<td>상품수정</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="product in products">
+							<td>{{product.no}}</td>
+							<td>{{product.name}}</td>
+							<td>{{product.category}}</td>
+							<td>{{product.amount}}</td>
+							<td>{{product.price}}</td>
+							<td>{{product.discountPrice}}</td>
+							<td>{{product.point}}</td>
+							<td>{{product.regDate}}</td>
+							<td>dummy</td>
+						</tr>
+						<tr>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+							<td>dummy</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer">
+				<div class="row">
+					<div class="col-8" style="margin: 0 auto;">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination">
+								<li class="page-item"><a class="page-link" href="#">Previous</a></li>
+								<li class="page-item"><a class="page-link" href="#">1</a></li>
+								<li class="page-item"><a class="page-link" href="#">2</a></li>
+								<li class="page-item"><a class="page-link" href="#">3</a></li>
+								<li class="page-item"><a class="page-link" href="#">4</a></li>
+								<li class="page-item"><a class="page-link" href="#">5</a></li>
+								<li class="page-item"><a class="page-link" href="#">Next</a></li>
+							</ul>
+						</nav>
+					</div>
+						<div class="col-4">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<select class="form-control">
+										<option value="name">상품이름</option>
+										<option value="category">카테고리</option>
+										<option value="tag">태그</option>
+									</select>
+								</div>
+								<input type="text" class="form-control" />
+								<div class="input-group-append">
+									<button type="button" class="btn btn-outline-secondary">검색</button>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<div class="card mt-4" v-show="addFormShow">
+			<form id="addForm" @submit.prevent="addProduct" >
+				<div class="card-header">
+					<span class="h5 text-primary font-weight-bold">상품 등록</span>
+				</div>
+				<div class="card-body">
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<td>
+									<div class="form-group">
+										<label>상품명 
+											<span class="ml-2 error-text">{{error.errorType == 'name' ? error.errorMsg : ''}}</span>
+										</label> 
+										<input type="text" class="form-control" name="name"
+										:class="{'error-box':error.errorType == 'name' ? true : false}"
+										v-model="product.name"
+										@click="errorClear"/>
+									</div>
+								</td>
+								<td colspan="2">
+									<div class="form-group">
+										<label>카테고리 
+											<span class="ml-2 error-text">{{error.errorType == 'category' ? error.errorMsg : ''}}</span>
+										</label> 
+										<select name="category" class="form-control"
+										:class="{'error-box':error.errorType == 'category' ? true : false }"
+										v-model="product.category"
+										@click="errorClear">
+											<option value="icecream" selected="selected">아이스크림</option>
+											<option value="cake">아이스크림 케이크</option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="form-group">
+										<label>상품가격
+											<span class="ml-2 error-text">{{error.errorType == 'price' ? error.errorMsg : ''}}</span>
+										</label> 
+										<input type="text" class="form-control" name="price"
+										:class="{'error-box':error.errorType == 'price' ? true : false }"
+										v-model.number="product.price"
+										@click="errorClear"
+										/>
+									</div>
+								</td>
+								<td>
+									<div class="form-group">
+										<div>상품할인가
+											<label for="discount-type-price" class="text-muted ml-5">가격
+												<input type="radio" class="input-control" name="discount-type"
+												value="price" id="discount-type-price"
+												v-model="discountType"
+												@click="isDiscountPrice = true"/>
+											</label>
+											<label for="discount-type-rate" class="text-muted ml-5">할인율
+												<input type="radio" class="input-control" name="discount-type"
+												value="rate" id="discount-type-rate"
+												v-model="discountType"
+												@click="isDiscountPrice = false"/>
+											</label>
+										</div>
+										<div class="input-group">
+											<select name="" id="" class="custom-select" 
+												v-model="selectedDiscountRate"
+												:disabled="isDiscountPrice ? true : false "
+												>
+												<option v-for="rate in discountRates" :value="rate">{{rate}} %</option>
+											</select>
+											<div class="input-group-append">
+												<input type="number" class="form-control"
+												 name="discountPrice"
+												 :readonly="isDiscountPrice ? false : true"
+												 :value="computeDiscount"
+												 />
+											</div>										
+										</div>
+										 
+									</div>
+								</td>
+								<td>
+									<div class="form-group">
+										<label>상품포인트
+											<span class="ml-2 error-text">{{error.errorType == 'point' ? error.errorMsg : ''}}</span>
+										</label> 
+										<input type="text" class="form-control"
+										name="point"
+										:class="{'error-box':error.errorType == 'point' ? true : false }"
+										:value="computePoint"
+										@click="errorClear"/>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="form-group">
+										<label>입고 수량
+											<span class="ml-2 error-text">{{error.errorType == 'amount' ? error.errorMsg : ''}}</span>
+										</label> 
+										<input min="0" type="number" class="form-control" 
+										name="amount"
+										:class="{'error-box':error.errorType == 'amount' ? true : false }"
+										v-model="product.amount"
+										@click="errorClear"/>
+									</div>
+								</td>
+								<td colspan="2">
+									<div class="form-group">
+										<label>태그 
+										<input type="checkbox" name="use-tag" class="input-control" 
+										:checked="isUseTag ? 'checked' : ''"
+										@click="toggleUseTag"/>
+										</label> 
+										<input type="text" class="form-control"
+										id="productTags" 
+										placeholder=", 로 구별해서 태그 등록을 해주세요"
+										:disabled="isUseTag ? false : true"
+										v-model="productTags"
+										/>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="1">
+									<div class="form-group">
+										<label>상품설명</label>
+										<textarea name="" id="" cols="50" rows="18"
+											class="form-control"
+											v-model="product.explain"></textarea>
+									</div>
+								</td>
+								<td colspan="2"><label>이미지파일
+									<span class="ml-2 error-text">{{error.errorType == 'image' ? error.errorMsg : ''}}</span>
+								</label>
+									<div class="custom-file">
+										<input type="file" class="custom-file-input"
+											id="product-image" name="image" value=""
+											v-on:change="fileSelect" ref="upload"
+											:class="{'error-box':error.errorType == 'image' ? true : false }"
+											@change="changeImage"
+											@click="errorClear">
+											 <label class="custom-file-label" for="product-image"
+											id="product-image-label">{{previewImgName}}</label>
+									</div>
+									<div style="border: 1px solid gray;" class="text-center">
+										<img class="w-100" :src="previewImgSrc"
+											style="max-width: 350px;"
+											@click="fileOpen"/>
+									</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-12 text-right">
+							<button class="btn btn-secondary btn-sm" type="reset">취소</button>
+							<button class="btn btn-primary btn-sm" type="submit"
+							>등록</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>
+<th:block layout:fragment="script">
+<script src="/static/js/admin/productAdd.js"></script>
+</th:block>
+</html>

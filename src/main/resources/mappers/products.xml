@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.ProductDao">
+	<insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="no">
+		INSERT INTO br_products
+		(`name`, amount, price, `POINT`, discount_price, category, `explain`)
+		VALUES
+		(#{name},#{amount},#{price},#{point},#{discountPrice},#{category},#{explain})
+		<selectKey resultType="int" order="AFTER" keyProperty="no">
+			SELECT LAST_INSERT_ID() as no
+		</selectKey>
+	</insert>
+	<insert id="insertImage" parameterType="ProductImage">
+		INSERT INTO br_product_image_path
+		(product_no, image_path)
+		VALUES
+		(#{no}, #{imagePath})
+	</insert>
+	<insert id="insertTag" parameterType="ProductTag">
+		INSERT INTO br_product_tag
+		(product_no, product_tag)
+		VALUES
+		<foreach collection="tags" item="tag" index="index" separator="," >
+		(#{no}, #{tag})
+		</foreach>
+	</insert>
+	<resultMap type="com.example.demo.dto.ProductDTO" id="ProductDTOMap">
+		<result property="no" column="no"/>
+		<result property="name" column="name"/>
+		<result property="amount" column="amount"/>
+		<result property="price" column="price"/>
+		<result property="point" column="point"/>
+		<result property="discountPrice" column="discountPrice"/>
+		<result property="category" column="category"/>
+		<result property="regDate" column="regDate"/>
+		<result property="reviews" column="reviews"/>
+		<result property="explain" column="explain"/>
+		<association property="no" column="productImage" select="getProductImage"></association>
+		<collection property="no" column="productTag" select="getProductTags"></collection>
+	</resultMap>
+	
+	
+	<select id="getAllProducts" parameterType="map" resultMap="ProductDTOMap">
+	
+	SELECT 
+			A.product_no 			AS "no",
+			A.`name`,
+			A.amount,
+			A.price,
+			A.`POINT`,
+			A.discount_price		AS "discountPrice",
+			A.category,
+			A.reg_date 			AS "regDate",
+			A.reviews,
+			A.explain
+	FROM br_products A
+	<if test="searchType != null and searchValue != null">
+		<where>
+			<choose>
+				<when test="searchType == 'name' ">
+					name like '%'#{searchValue}'%'
+				</when>
+				<when test="searchType == 'category' ">
+					category like '%'#{searchValue}'%'
+				</when>
+				<when test="searchType == 'tag' ">
+					JOIN br_product_tag B ON A.product_no = B.product_no
+					WHERE B.product_tag LIKE '%'#{seachValue}'%'
+				</when>
+			</choose>
+		</where>
+	</if>
+	
+	ORDER BY reg_date DESC 
+	<if test="pagination != null">
+	
+	LIMIT #{pagination.beginIndex}, #{pagination.endIndex}
+	
+	</if>
+	
+	
+	</select>
+	<select id="getProductImage" parameterType="int" resultType="ProductImage">
+		SELECT
+			product_no 		as "no",
+			image_path 		as "imagePath"
+		FROM
+			br_product_image_path
+		WHERE
+			product_no = #{value}
+	</select>
+	<select id="getProductTags" parameterType="int" resultType="ProductTag">
+		SELECT
+			product_no 		AS "no",
+			product_tag 	AS "tag"
+		FROM
+			br_product_tag
+		WHERE
+			product_no = #{value}
+	</select>
+	
+</mapper>

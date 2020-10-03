@@ -5,14 +5,26 @@
 		style="border: 1px solid gray">
 		<div class="container-fluid">
 			<div class="row">
-
-				<div class="col-1">
-					<a href="/login" class="nav-link">LOGIN</a>
+				<div class="col-3" sec:authorize="isAnonymous()">
+					<div class="row">
+						<div class="col-6">
+							<a href="/login" class="nav-link">LOGIN</a>
+						</div>
+						<div class="col-6">
+							<a href="/join" class="nav-link">JOIN</a>
+						</div>
+					</div>
 				</div>
-				<div class="col-1">
-					<a href="#" class="nav-link">JOIN</a>
+				<div class="col-3" sec:authorize="isAuthenticated()">
+					<div class="row">
+						<div class="col-6">
+							<a href="/user/logout" class="nav-link">LOGOUT</a>
+						</div>
+						<div class="col-6">
+							<a href="#" class="nav-link">MY PAGE</a>
+						</div>
+					</div>
 				</div>
-
 				<div class="col-9">
 					<ul class="nav justify-content-end list-unstyled" id="custom-nav">
 						<li class="nav-item" style="width: 400px;"><a
@@ -29,7 +41,7 @@
 							class="nav-link" href="#">MENU</a> <transition name="slide">
 							<div class="nav-sub" v-if="showNavi">
 								<ul class="nav-sub-menu list-unstyled">
-									<li class="m-3"><a href="#">아이스크림</a></li>
+									<li class="m-3"><a href="/icecreams">아이스크림</a></li>
 									<li class="m-3"><a href="#">아이스크림 케이크</a></li>
 								</ul>
 							</div>
@@ -50,4 +62,5 @@
 		</div>
 	</div>
 </nav>
+<script src="/static/js/main.js"></script>
 </html>
