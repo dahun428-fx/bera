@@ -16,6 +16,7 @@ public class ProductForm {
 	private String explain;
 	private String[] tagArray;
 	private String imagePath;
+	private String isAvailable;
 	private MultipartFile upload;
 	
 	public ProductForm() {}
@@ -103,6 +104,13 @@ public class ProductForm {
 		this.imagePath = imagePath;
 	}
 
+	public String getIsAvailable() {
+		return isAvailable;
+	}
+
+	public void setIsAvailable(String isAvailable) {
+		this.isAvailable = isAvailable;
+	}
 
 	public MultipartFile getUpload() {
 		return upload;

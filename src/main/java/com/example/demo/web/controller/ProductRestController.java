@@ -52,6 +52,18 @@ public class ProductRestController {
 		
 		return resultMap;
 	}
+	@GetMapping("/images")
+	@ResponseBody
+	public Map<String, Object> getProductImages(){
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("query", "getProductImages");
+		Map<String, Object> map = productService.list(param);
+		resultMap.put("imageList", map.get("imageList"));
+		
+		return resultMap;
+	}
 	@GetMapping("/products/{no}")
 	@ResponseBody
 	public ProductDTO getProduct(@PathVariable("no") int productNo) {

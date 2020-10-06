@@ -30,6 +30,11 @@
    overflow: hidden;
    max-height: 0;
 }
+a:hover{
+	color: #ff69b4;
+	text-decoration: none;
+}
+
 .header {
 	background-color: #FDF5E6;
 }
@@ -46,6 +51,18 @@
 	width: 125px;
 	position: relative;
 	z-index: 1;
+	margin: 0 auto;
+}
+.ice-img-top-list {
+	width: 180px;
+	position: relative;
+	z-index: 1;
+	margin: 0 auto;
+}
+.ice-img-bottom-list {
+	position: relative;
+	width: 60px;
+	top: -80px;
 	margin: 0 auto;
 }
 .ice-img-bottom {

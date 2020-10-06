@@ -7,6 +7,8 @@ var productAdd = new Vue({
 	el:"#productApp",
 	data:{
 		products:[],
+		productImages:[],
+		productImagesPath:[],
 		product:{
 			name:"",
 			category:"",
@@ -17,7 +19,8 @@ var productAdd = new Vue({
 			explain:"",
 			tagArray:[],
 			imagePath:"",
-			upload:""
+			upload:"",
+			isAvailalble:""
 		},
 		search:{
 			pageNo:"1",
@@ -42,10 +45,6 @@ var productAdd = new Vue({
 		isUseTag:true,
 		//radio 초기값
 		discountType:"price",
-		//이미지 미리보기 초기값
-		previewImgSrc : "/static/img/main/no_detail_img.jpg",
-		//input = file image 이미지 이름 미리보기 초기값
-		previewImgName : "파일을 선택하세요",
 		//'상품등록'을 눌렀을때 card box 표시여부
 		addFormShow:false,
 		//input =tags 의 초기값, bind 되어있다.
@@ -56,23 +55,40 @@ var productAdd = new Vue({
 		},
 		btn:{
 			type:"new"
+		},
+		img:{
+			previewImgSrc : "/static/img/main/no_detail_img.jpg",
+			previewImgName : "파일을 선택하세요",
+			addImgRadioType : "new"
 		}
 	},
 	beforeCreate:function(){
 		searchForm = new FormData();
 		searchForm.append('pageNo',1);
+		searchForm.append('formType', 'admin');
 	
 		axios.post("/product/products",searchForm, {
-		
-				headers:{
-					'X-CSRF-TOKEN':metaToken
-				}
+			headers:{
+				'X-CSRF-TOKEN':metaToken
+			}
 		})
 		.then(function(response){
 			productAdd.products = response.data.list;
 			productAdd.pagination = response.data.pagination;
 		});
-	
+		
+		axios.get("/product/images",{
+			headers:{
+				'X-CSRF-TOKEN':metaToken
+			}
+		})
+		.then(function(response){
+			const imageList = response.data.imageList;
+			productAdd.productImages = imageList;
+			for(var i in imageList){
+				productAdd.productImagesPath.push(imageList[i].imagePath.substring(13));
+			}
+		})
 	},
 	filters:{
 		currency:function(value){
@@ -93,10 +109,9 @@ var productAdd = new Vue({
 	},
 	methods:{
 		deleteProduct:function(no){
-			console.log('delete', no);
 			axios.delete("/product/products/"+no,{
 				headers:{
-					'X-CSRF-TOKEN':metaToken
+						'X-CSRF-TOKEN':metaToken
 				}
 			})
 			.then(function(response){
@@ -130,6 +145,7 @@ var productAdd = new Vue({
 				productAdd.product.amount = data.amount;
 				productAdd.product.explain = data.explain;
 				productAdd.product.tagArray = data.productTag;
+				productAdd.product.isAvailable = data.isAvailable;
 				const tagArray = data.productTag;
 				var tags = '';
 				if(tagArray.length > 0){
@@ -141,8 +157,8 @@ var productAdd = new Vue({
 				tags = tags.substring(0, tags.length - 2);
 				productAdd.productTags = tags;
 				productAdd.product.imagePath = data.productImage.imagePath;
-				productAdd.previewImgSrc = "/static/img/"+data.category+"/"+data.productImage.imagePath;
-				productAdd.previewImgName = data.productImage.imagePath.substring(13);
+				productAdd.img.previewImgSrc = "/static/img/"+data.category+"/"+data.productImage.imagePath;
+				productAdd.img.previewImgName = data.productImage.imagePath.substring(13);
 			}); 	
 		},
 		//pagination 함수
@@ -193,8 +209,8 @@ var productAdd = new Vue({
 				return;
 			}
 			this.product.imagePath = fileName;
-			this.previewImgName = fileName;
-			this.previewImgSrc = URL.createObjectURL(file);
+			this.img.previewImgName = fileName;
+			this.img.previewImgSrc = URL.createObjectURL(file);
 		},
 		//이미지 미리보기 눌렀을때 input file 클릭 연계 function
 		fileOpen:function(){
@@ -229,12 +245,13 @@ var productAdd = new Vue({
 				explain:"",
 				tagArray:[],
 				imagePath:"",
-				upload:""
+				upload:"",
+				isAvailalble:""
 			};
 			this.productTags = "";
 			document.getElementById("product-image").value = '';
-			this.previewImgName = "파일을 선택하세요";
-			this.previewImgSrc = "/static/img/main/no_detail_img.jpg";
+			this.img.previewImgName = "파일을 선택하세요";
+			this.img.previewImgSrc = "/static/img/main/no_detail_img.jpg";
 		},
 		updateProduct:function(no){
 			productAdd.checkFunction();
@@ -252,7 +269,6 @@ var productAdd = new Vue({
 			formData.append('explain', this.product.explain);
 			formData.append('tagArray', this.product.tagArray);
 			formData.append('imagePath', this.product.imagePath);
-			formData.append('upload -->', this.product.upload);
 			axios.put('/product/update', formData,{
 				headers:{
 					'Content-Type':'multipart/form-data',
@@ -345,6 +361,47 @@ var productAdd = new Vue({
 				this.error.errorMsg = '이미지를 등록해주세요';
 				return;
 			}
+		},
+		isAvailable:function(no){
+			const formData = new FormData();
+			formData.append('no', no);
+			formData.append('isAvailable', 'Y');
+			axios.put('/product/update', formData, {
+				headers:{
+					'X-CSRF-TOKEN':metaToken
+				}
+			}).then(function(response){
+				const isSuccess = response.data.isSuccess;
+				const msg = response.data.msg;
+				if(isSuccess == 'fail'){
+					alert(msg);
+				} else {
+					alert(msg);
+					productAdd.clearForm();
+					history.go(0);
+				}
+			})
+		},
+		noAvailable:function(no){
+			console.log(no);
+			const formData = new FormData();
+			formData.append('no', no);
+			formData.append('isAvailable', 'N');
+			axios.put('/product/update', formData, {
+				headers:{
+					'X-CSRF-TOKEN':metaToken
+				}
+			}).then(function(response){
+				const isSuccess = response.data.isSuccess;
+				const msg = response.data.msg;
+				if(isSuccess == 'fail'){
+					alert(msg);
+				} else {
+					alert(msg);
+					productAdd.clearForm();
+					history.go(0);
+				}
+			})
 		}
 	}
 	

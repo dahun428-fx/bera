@@ -27,6 +27,7 @@ public class Product {
 	private Date regDate;
 	private int reviews;
 	private String explain;
+	private String isAvailable;
 	
 	public Product() {}
 
@@ -109,12 +110,20 @@ public class Product {
 	public void setExplain(String explain) {
 		this.explain = explain;
 	}
+	
+	public String getIsAvailable() {
+		return isAvailable;
+	}
+
+	public void setIsAvailable(String isAvailable) {
+		this.isAvailable = isAvailable;
+	}
 
 	@Override
 	public String toString() {
 		return "Product [no=" + no + ", name=" + name + ", amount=" + amount + ", price=" + price + ", point=" + point
 				+ ", discountPrice=" + discountPrice + ", category=" + category + ", regDate=" + regDate + ", reviews="
-				+ reviews + ", explain=" + explain + "]";
+				+ reviews + ", explain=" + explain + ", isAvailable=" + isAvailable + "]";
 	}
 	
 }

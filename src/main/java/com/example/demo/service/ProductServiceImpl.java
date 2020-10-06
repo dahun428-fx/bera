@@ -50,15 +50,14 @@ public class ProductServiceImpl implements ProductService{
 			return resultMap;
 		}
 		ProductImage savedImage = productDao.getProductImageByNo(no);
-		if(savedImage == null) {
-			resultMap.put("isSuccess", "fail");
-			resultMap.put("msg", "해당 상품의 이미지가 없습니다. 삭제에 실패하였습니다.");
-			return resultMap;
+		if(savedImage != null) {
+			productDao.deleteImagePathByNo(no);
 		}
-		
+		List<ProductTag> savedTags =  productDao.getProductTagsByNo(no);
+		if(!savedTags.isEmpty()) {
+			productDao.deleteTagsByNo(no);
+		}
 		productDao.delete(no);
-		productDao.deleteImagePathByNo(no);
-		productDao.deleteTagsByNo(no);
 		
 		resultMap.put("isSuccess", "success");
 		resultMap.put("msg", "삭제되었습니다.");
@@ -68,21 +67,34 @@ public class ProductServiceImpl implements ProductService{
 	public Map<String, Object> list(Map<String, Object> map) {
 		Map<String, Object> resultMap = new HashMap<>();
 		
+		if("getProductImages".equals(map.get("query"))) {
+			System.out.println(map.get("query"));
+			List<ProductImage> list = productDao.getProductImages();
+			System.out.println(list);
+			resultMap.put("imageList", list);
+			return resultMap;
+		};
+		
 		Map<String, Object> param = new HashMap<>();
 		SearchForm searchForm = (SearchForm) map.get("searchForm");
 		if(searchForm != null) {
-			
 			param.put("searchType", searchForm.getSearchType());
 			param.put("searchValue", searchForm.getSearchValue());
-			
+			param.put("formType", searchForm.getFormType());
+			param.put("listType", searchForm.getListType());
 		}
+		System.out.println("searchType : " + searchForm.getSearchType());
+		System.out.println("formType : " + searchForm.getFormType());
+		System.out.println("listType : " + searchForm.getListType());
 		int totalRows = this.totalListCount(param);
-		int rowsPerPage = 5;
-		int pagesPerBlock = 5;
+		int rowsPerPage = ("user".equals(searchForm.getFormType())) ? 5 : 5;
+		int pagesPerBlock = ("user".equals(searchForm.getFormType())) ? 5 : 5;
 		int pageNo = (searchForm != null) ? searchForm.getPageNo() : 1;
 		
 		Pagination pagination = new Pagination(rowsPerPage, pagesPerBlock, pageNo, totalRows);
-		pagination.setEndIndex(5);
+		int endIndex = ("user".equals(searchForm.getFormType())) ? 25 : 5;
+		pagination.setEndIndex(endIndex);
+		System.out.println("endIndex : " + endIndex);
 		param.put("pagination", pagination);
 		List<ProductDTO> list = productDao.getAllProducts(param);
 		
@@ -146,6 +158,21 @@ public class ProductServiceImpl implements ProductService{
 	public Map<String, Object> update(ProductForm productForm) {
 		Map<String, Object> resultMap = new HashMap<>();
 		
+		System.out.println("productForm.getIsAvailable() : " + productForm.getIsAvailable()); 
+		if(productForm.getIsAvailable() != null) {
+			
+			Product product = new Product();
+			product.setNo(productForm.getNo());
+			product.setIsAvailable(productForm.getIsAvailable());
+			System.out.println("product : " + product);
+			productDao.updateAvailable(product);
+			
+			resultMap.put("isSuccess", "success");
+			resultMap.put("msg", "성공하였습니다.");
+			return resultMap;
+		}
+		
+		System.out.println("productForm.getIsAvailable() : " + productForm.getIsAvailable()); 
 		Product product = new Product();
 		product.setNo(productForm.getNo());
 		product.setName(productForm.getName());

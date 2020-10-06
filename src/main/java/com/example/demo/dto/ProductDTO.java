@@ -20,6 +20,7 @@ public class ProductDTO {
 	private Date regDate;
 	private int reviews;
 	private String explain;
+	private String isAvailable;
 	private ProductImage productImage;
 	private List<ProductTag> productTag;
 
@@ -86,6 +87,12 @@ public class ProductDTO {
 	public void setExplain(String explain) {
 		this.explain = explain;
 	}
+	public String getIsAvailable() {
+		return isAvailable;
+	}
+	public void setIsAvailable(String isAvailable) {
+		this.isAvailable = isAvailable;
+	}
 	public ProductImage getProductImage() {
 		return productImage;
 	}
@@ -106,9 +113,9 @@ public class ProductDTO {
 	public String toString() {
 		return "ProductDTO [no=" + no + ", name=" + name + ", amount=" + amount + ", price=" + price + ", point="
 				+ point + ", discountPrice=" + discountPrice + ", category=" + category + ", regDate=" + regDate
-				+ ", reviews=" + reviews + ", explain=" + explain + ", productImage=" + productImage + ", productTag="
-				+ productTag + "]";
+				+ ", reviews=" + reviews + ", explain=" + explain + ", isAvailable=" + isAvailable + ", productImage="
+				+ productImage + ", productTag=" + productTag + "]";
 	}
 
-
+	
 }

@@ -36,6 +36,7 @@
 		<result property="regDate" column="regDate"/>
 		<result property="reviews" column="reviews"/>
 		<result property="explain" column="explain"/>
+		<result property="isAvailable" column="isAvailable" />
 		<association property="productImage" column="no" select="getProductImageByNo"/>
 		<collection property="productTag" column="no" select="getProductTagsByNo"/>
 	</resultMap>
@@ -50,7 +51,8 @@
 			A.category,
 			A.reg_date 			AS "regDate",
 			A.reviews,
-			A.explain
+			A.explain,
+			A.isAvailable
 		FROM br_products A
 		WHERE A.product_no = #{value}
 	
@@ -68,9 +70,10 @@
 			A.category,
 			A.reg_date 			AS "regDate",
 			A.reviews,
-			A.explain
+			A.explain,
+			A.isAvailable
 	FROM br_products A
-	<if test="searchType != '' and searchValue != '' ">
+	<if test="searchType != '' and searchValue != '' and formType == 'admin' ">
 		<choose>
 				<when test="searchType == 'name' ">
 					WHERE name like concat ('%',#{searchValue},'%')
@@ -84,6 +87,10 @@
 				</when>
 		</choose>
 	</if>
+	<if test="formType == 'user' and listType != '' ">
+		WHERE A.category IN (#{listType})
+		AND A.isAvailable IN ('Y')
+	</if>
 	
 	ORDER BY A.product_no DESC 
 	<if test="pagination != null">
@@ -91,8 +98,13 @@
 	LIMIT #{pagination.beginIndex}, #{pagination.endIndex}
 	
 	</if>
-	
-	
+	</select>
+	<select id="getProductImages" resultType="com.example.demo.vo.ProductImage">
+		SELECT
+			product_no 		as "no",
+			image_path 		as "imagePath"
+		FROM
+			br_product_image_path
 	</select>
 	<select id="getProductImageByNo" parameterType="int" resultType="com.example.demo.vo.ProductImage">
 		SELECT
@@ -112,6 +124,14 @@
 		WHERE
 			product_no = #{value}
 	</select>
+	<update id="updateAvailable" parameterType="Product">
+		UPDATE
+			br_products
+		SET
+			isAvailable = #{isAvailable}
+		WHERE
+			product_no = #{no}		
+	</update>
 	<update id="update"	parameterType="Product">
 		UPDATE
 			br_products
@@ -135,7 +155,7 @@
 		WHERE product_no = #{value}
 	</delete>
 	<delete id="deleteImagePathByNo" parameterType="int">
-		DELETE FROM br_product_tag
+		DELETE FROM br_product_image_path
 		WHERE product_no = #{value}
 	
 	</delete>

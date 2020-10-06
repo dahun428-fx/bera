@@ -5,7 +5,8 @@ public class SearchForm {
 	private int pageNo;
 	private String searchType;
 	private String searchValue;
-	
+	private String formType;
+	private String listType;
 	
 	public SearchForm() {
 	}
@@ -34,7 +35,21 @@ public class SearchForm {
 		this.searchValue = searchValue;
 	}
 	
-	
+	public String getFormType() {
+		return formType;
+	}
+
+	public void setFormType(String formType) {
+		this.formType = formType;
+	}
+
+	public String getListType() {
+		return listType;
+	}
+
+	public void setListType(String listType) {
+		this.listType = listType;
+	}
 
 	@Override
 	public String toString() {

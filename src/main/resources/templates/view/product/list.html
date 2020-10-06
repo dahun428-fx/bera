@@ -8,7 +8,7 @@
                 <!-- 카테고리에 따라서 배너 이미지 바꾸기 -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img class="list-banner-img" src="../image/<%="ICECREAM".equals(cat) ? "list-banner-img-cream.jpg" : "list-banner-img-cake.jpg"%>" alt="" />
+                        <img class="list-banner-img" src="../image/" />
                     </div>
                 </div>
                 <!-- banner end -->
@@ -26,13 +26,13 @@
                             <div class="col-2 text-center">
                                 <span class="badge badge-pill badge-info">위</span>
                                 <!-- product-detail-page-move -->
-                                <a href="detail.jsp?productNo=<%=product.getNo()%>">
-                                    <!-- product-detail-page-move --> <img class="img-thumbnail" src="../image/<%=cat %>/<%=product.getImagePath()%>" alt="" />
+                                <a href="#">
+                                    <!-- product-detail-page-move --> <img class="img-thumbnail" src="">
                                 </a>
                                 <div class="title text-center">
                                     <p>
                                         <!-- product-detail-page-move -->
-                                        <a href="detail.jsp?productNo=<%=product.getNo()%>"><%=product.getName()%></a>
+                                        <a href="#"></a>
                                         <!-- product-detail-page-move -->
                                     </p>
                                 </div>
@@ -46,13 +46,37 @@
                         <!-- category name end -->
                         <hr />
                         <!-- product list -->
-                        <div class="row custom-content-box" id="product-list">
+                        <div class="row custom-content-box">
                             <!-- product -->
-
+							<div class="col-12">
+								<div class="row">
+									<template v-for="product in products">
+										<div class="col-3 mt-4">
+											<div class="card" style="overflow: hidden; height: 290px;">
+												<div class="h4 text-center mt-4">{{product.name}}</div>
+												<span class="ml-2 text-center">
+													<template v-for="(tag, index) in product.productTag" v-if="index < 2">	
+														<a href="#">{{tag.tag}}</a>
+													</template>
+												</span>
+												<div class="text-center mt-1">
+													<button class="btn btn-secondary btn-sm">구매</button>
+												</div>
+												<img 
+												:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" 
+												class="ice-img-top-list"
+												/>
+												 <img
+													class="ice-img-bottom-list"
+													src="/static/img/main/icecream-bottom.png" alt="" />
+											</div>
+										</div>
+									</template>
+								</div>
+							</div>
                             <!-- product -->
-
                         </div>
-                        <ul class="pagination justify-content-center" id="pageBar" style="margin: 20px 0">
+                        <ul class="pagination justify-content-center" style="margin: 20px 0">
                         </ul>
                         <!-- product list -->
                     </div>
@@ -63,4 +87,8 @@
                     </div>
                 </div>
             </div>
+        <input type="hidden" th:value="${uriType}" id="uriType" />
         </div>
+<th:block layout:fragment="script">
+<script src="/static/js/user/list.js"></script>
+</th:block>

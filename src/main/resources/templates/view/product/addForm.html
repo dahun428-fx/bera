@@ -24,6 +24,7 @@
 							<td>할인가격</td>
 							<td>포인트</td>
 							<td>등록일</td>
+							<td>활성화</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -36,6 +37,18 @@
 							<td>{{product.discountPrice}}</td>
 							<td>{{product.point}}</td>
 							<td>{{product.regDate}}</td>
+							<td>
+								<div class="btn-group">
+									<button type="button" 
+									class="btn btn-primary btn-sm"
+									v-if="product.isAvailable == 'Y' "
+									@click.stop="noAvailable(product.no)">활성</button>
+									<button type="button" 
+									class="btn btn-secondary btn-sm"
+									v-if="product.isAvailable == 'N' "
+									@click.stop="isAvailable(product.no)">비활성</button>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -206,21 +219,48 @@
 								<td colspan="2"><label>이미지파일
 									<span class="ml-2 error-text">{{error.errorType == 'image' ? error.errorMsg : ''}}</span>
 								</label>
-									<div class="custom-file">
-										<input type="file" class="custom-file-input"
-											id="product-image" name="image" value=""
-											v-on:change="fileSelect" ref="upload"
-											:class="{'error-box':error.errorType == 'image' ? true : false }"
-											@change="changeImage"
-											@click="errorClear">
-											 <label class="custom-file-label" for="product-image"
-											id="product-image-label">{{previewImgName}}</label>
-									</div>
-									<div style="border: 1px solid gray;" class="text-center">
-										<img class="w-100" :src="previewImgSrc"
-											style="max-width: 350px;"
-											@click="fileOpen"/>
-									</div>
+									<label class="text-muted" for="image-new-add">새로등록</label>
+									<input type="radio" id="image-new-add" name="imageAdd" 
+									 value="new"
+									 v-model="img.addImgRadioType"/>
+									<label class="text-muted" for="image-exist-add">기존추가</label>
+									<input type="radio" id="image-exist-add" name="imageAdd" 
+									 value="exist"
+									 v-model="img.addImgRadioType"/>
+									 <div v-if="img.addImgRadioType == 'new' ">
+										<div class="custom-file">
+											<input type="file" class="custom-file-input"
+												id="product-image" name="image" value=""
+												v-on:change="fileSelect" ref="upload"
+												:class="{'error-box':error.errorType == 'image' ? true : false }"
+												@change="changeImage"
+												@click="errorClear">
+												 <label class="custom-file-label" for="product-image"
+												id="product-image-label">{{img.previewImgName}}</label>
+										</div>
+										<div style="border: 1px solid gray;" class="text-center">
+											<img class="w-100" :src="img.previewImgSrc"
+												style="max-width: 350px;"
+												@click="fileOpen"/>
+										</div>
+									 </div>
+									 <div class="card" v-if="img.addImgRadioType != 'new' ">
+									 	<div class="card-header"></div>
+									 	<div class="card-content" style="width: 600px; height: 380px; padding: 10px; overflow: scroll;">
+									 		<div class="row">
+									 			<div class="col-3 mt-2" v-for="image in productImages">
+									 				<div class="card">
+									 					<img class="img-thumbnail" :src="'/static/img/icecream/' + image.imagePath" alt="" />
+									 				</div>
+									 			</div>
+									 		</div>
+									 	</div>
+									 	<div class="card-footer text-right">
+									 		<button class="btn btn-primary" type="button">
+									 			등록
+									 		</button>
+									 	</div>
+									 </div>
 									</td>
 							</tr>
 						</tbody>

@@ -1,7 +1,9 @@
 package com.example.demo.web.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 public class PageController {
@@ -14,8 +16,14 @@ public class PageController {
 	public String joinForm() {
 		return "view/user/join";
 	}
-	@GetMapping("/icecreams")
-	public String productList() {
+	@GetMapping("/icecream")
+	public String icecreamList(Model model) {
+		model.addAttribute("uriType", "icecream");
+		return "view/product/list";
+	}
+	@GetMapping("/cake")
+	public String cakeList(Model model) {
+		model.addAttribute("uriType", "cake");
 		return "view/product/list";
 	}
 	
