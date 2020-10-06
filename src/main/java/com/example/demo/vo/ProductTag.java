@@ -37,8 +37,10 @@ public class ProductTag {
 
 	@Override
 	public String toString() {
-		return "ProductTag [no=" + no + ", tags=" + Arrays.toString(tags) + "]";
+		return "ProductTag [no=" + no + ", tags=" + Arrays.toString(tags) + ", tag=" + tag + "]";
 	}
+
+	
 	
 	
 }

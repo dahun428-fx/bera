@@ -9,7 +9,7 @@
 				<div class="d-flex justify-content-between">
 					<span class="h5 text-primary font-weight-bold">상품 전체조회</span>
 					<button class="btn btn-primary btn-sm text-right" type="button"
-						@click="toggleForm()">상품등록</button>
+						@click="toggleForm">상품등록</button>
 				</div>
 			</div>
 			<div class="card-body">
@@ -24,11 +24,10 @@
 							<td>할인가격</td>
 							<td>포인트</td>
 							<td>등록일</td>
-							<td>상품수정</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="product in products">
+						<tr v-for="product in products" @click="getProduct(product.no)">
 							<td>{{product.no}}</td>
 							<td>{{product.name}}</td>
 							<td>{{product.category}}</td>
@@ -37,18 +36,6 @@
 							<td>{{product.discountPrice}}</td>
 							<td>{{product.point}}</td>
 							<td>{{product.regDate}}</td>
-							<td>dummy</td>
-						</tr>
-						<tr>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
-							<td>dummy</td>
 						</tr>
 					</tbody>
 				</table>
@@ -58,28 +45,25 @@
 					<div class="col-8" style="margin: 0 auto;">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination">
-								<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#">4</a></li>
-								<li class="page-item"><a class="page-link" href="#">5</a></li>
-								<li class="page-item"><a class="page-link" href="#">Next</a></li>
+								<li v-show="pagination.pageNo != pagination.beginPage" class="page-item"><a class="page-link" @click="movePage(pagination.pageNo - 1)">이전</a></li>
+								<li v-for="page in pagination.endPage" class="page-item" :class="(page == pagination.pageNo) ? 'active' : '' " ><a class="page-link" @click="movePage(page)">{{page}}</a></li>
+								<li v-show="pagination.pageNo != pagination.endPage" class="page-item"><a class="page-link" @click="movePage(pagination.pageNo + 1)">다음</a></li>
 							</ul>
 						</nav>
 					</div>
 						<div class="col-4">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<select class="form-control">
+									<select class="form-control" v-model="search.searchType">
 										<option value="name">상품이름</option>
 										<option value="category">카테고리</option>
 										<option value="tag">태그</option>
 									</select>
 								</div>
-								<input type="text" class="form-control" />
+								<input type="text" v-model="search.searchValue" class="form-control" />
 								<div class="input-group-append">
-									<button type="button" class="btn btn-outline-secondary">검색</button>
+									<button type="button" class="btn btn-outline-secondary"
+									@click="movePage(pagination.pageNo)">검색</button>
 								</div>
 							</div>
 						</div>
@@ -87,7 +71,7 @@
 			</div>
 		</div>
 		<div class="card mt-4" v-show="addFormShow">
-			<form id="addForm" @submit.prevent="addProduct" >
+			<form id="addForm">
 				<div class="card-header">
 					<span class="h5 text-primary font-weight-bold">상품 등록</span>
 				</div>
@@ -151,7 +135,7 @@
 											</label>
 										</div>
 										<div class="input-group">
-											<select name="" id="" class="custom-select" 
+											<select class="custom-select" 
 												v-model="selectedDiscountRate"
 												:disabled="isDiscountPrice ? true : false "
 												>
@@ -161,7 +145,7 @@
 												<input type="number" class="form-control"
 												 name="discountPrice"
 												 :readonly="isDiscountPrice ? false : true"
-												 :value="computeDiscount"
+												 v-model="computePrice"
 												 />
 											</div>										
 										</div>
@@ -176,7 +160,7 @@
 										<input type="text" class="form-control"
 										name="point"
 										:class="{'error-box':error.errorType == 'point' ? true : false }"
-										:value="computePoint"
+										:value="product.point"
 										@click="errorClear"/>
 									</div>
 								</td>
@@ -187,7 +171,7 @@
 										<label>입고 수량
 											<span class="ml-2 error-text">{{error.errorType == 'amount' ? error.errorMsg : ''}}</span>
 										</label> 
-										<input min="0" type="number" class="form-control" 
+										<input min="0" type="number" class="form-control" id="productAmount"
 										name="amount"
 										:class="{'error-box':error.errorType == 'amount' ? true : false }"
 										v-model="product.amount"
@@ -236,7 +220,8 @@
 										<img class="w-100" :src="previewImgSrc"
 											style="max-width: 350px;"
 											@click="fileOpen"/>
-									</div></td>
+									</div>
+									</td>
 							</tr>
 						</tbody>
 					</table>
@@ -244,9 +229,20 @@
 				<div class="card-footer">
 					<div class="row">
 						<div class="col-12 text-right">
-							<button class="btn btn-secondary btn-sm" type="reset">취소</button>
-							<button class="btn btn-primary btn-sm" type="submit"
-							>등록</button>
+							<button class="btn btn-secondary btn-sm" type="reset"
+							v-if="btn.type == 'new' ">취소</button>
+						
+							<button class="btn btn-primary btn-sm" type="button"
+							v-if="btn.type == 'new'"
+							@click="addProduct">등록</button>
+							
+							<button class="btn btn-warning btn-sm" type="button"
+							v-if="btn.type == 'modify'"
+							@click="updateProduct(product.no)">수정</button>
+							
+							<button class="btn btn-danger btn-ms" type="button"
+							v-if="btn.type == 'modify'"
+							@click="deleteProduct(product.no)">삭제</button>
 						</div>
 					</div>
 				</div>

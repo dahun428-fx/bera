@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ProductForm {
 
+	private int no;
 	private String name;
 	private String category;
 	private int price;
@@ -18,6 +19,17 @@ public class ProductForm {
 	private MultipartFile upload;
 	
 	public ProductForm() {}
+
+	
+	public int getNo() {
+		return no;
+	}
+
+
+	public void setNo(int no) {
+		this.no = no;
+	}
+
 
 	public String getName() {
 		return name;
@@ -100,13 +112,13 @@ public class ProductForm {
 		this.upload = upload;
 	}
 
+
 	@Override
 	public String toString() {
-		return "ProductForm [name=" + name + ", category=" + category + ", price=" + price + ", discountPrice="
-				+ discountPrice + ", point=" + point + ", amount=" + amount + ", explain=" + explain + ", tagArray="
-				+ Arrays.toString(tagArray) + ", imagePath=" + imagePath + ", upload=" + upload + "]";
+		return "ProductForm [no=" + no + ", name=" + name + ", category=" + category + ", price=" + price
+				+ ", discountPrice=" + discountPrice + ", point=" + point + ", amount=" + amount + ", explain="
+				+ explain + ", tagArray=" + Arrays.toString(tagArray) + ", imagePath=" + imagePath + ", upload="
+				+ upload + "]";
 	}
 
-	
-	
 }

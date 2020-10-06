@@ -28,8 +28,8 @@ public class Pagination {
 		if (pageNo < 0 || pageNo > totalPages) {
 			pageNo = 1;
 		}
-		beginIndex = (pageNo - 1)*rowsPerPage + 1;
-		endIndex = pageNo*rowsPerPage;
+		beginIndex = (pageNo - 1)*rowsPerPage;
+		endIndex = (pageNo*rowsPerPage);
 		totalBlocks = (int) Math.ceil((double) totalPages/pagesPerBlock);
 		currentBlock = (int) Math.ceil((double) pageNo/pagesPerBlock);
 		beginPage = (currentBlock - 1)*pagesPerBlock + 1;
@@ -63,6 +63,13 @@ public class Pagination {
 		return endPage;
 	}
 
+	public void setBeginIndex(int beginIndex) {
+		this.beginIndex = beginIndex;
+	}
+	public void setEndIndex(int endIndex) {
+		this.endIndex = endIndex;
+	}
+	
 	@Override
 	public String toString() {
 		return "Pagenation [rowsPerPage=" + rowsPerPage + ", pagesPerBlock=" + pagesPerBlock + ", pageNo=" + pageNo

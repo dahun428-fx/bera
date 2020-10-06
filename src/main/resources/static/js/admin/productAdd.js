@@ -1,15 +1,5 @@
 /**
- * 	private int no;
-	private String name;
-	private int amount;
-	private int price;
-	private double point;
-	private double discountPrice;
-	private String category;
-	private Date regDate;
-	private int reviews;
-	private String explain;
-	
+ * 
  */
 let metaToken = document.querySelector('meta[name="_csrf"]').content;
 
@@ -21,18 +11,31 @@ var productAdd = new Vue({
 			name:"",
 			category:"",
 			price:"",
-			discountPrice:"",
-			point:"",
+			discountPrice:0,
+			point:0,
 			amount:"",
 			explain:"",
 			tagArray:[],
 			imagePath:"",
 			upload:""
 		},
+		search:{
+			pageNo:"1",
+			searchType:"name",
+			searchValue:""
+		},
+		pagination:{
+			pageNo:"",
+			totalPages:"",
+			beginPage:"",
+			endPage:"",
+			beginIndex:"",
+			endIndex:""
+		},
 		//discuntRates 에서 선택된 rate
 		selectedDiscountRate:"",
 		//option list discountRates
-		discountRates:[5,10,15,20,25,30,35,40,45,50,55,60,65,70],
+		discountRates:[0,5,10,15,20,25,30,35,40,45,50,55,60,65,70],
 		//radio에서 선택된 value가 price or rate 인지 구별
 		isDiscountPrice:true,
 		//input tag를 사용할지 안할지에 대한 checkbox 여부
@@ -50,13 +53,24 @@ var productAdd = new Vue({
 		error:{
 			errorMsg:"",
 			errorType:""
+		},
+		btn:{
+			type:"new"
 		}
 	},
 	beforeCreate:function(){
+		searchForm = new FormData();
+		searchForm.append('pageNo',1);
 	
-		axios.get("/product/products")
+		axios.post("/product/products",searchForm, {
+		
+				headers:{
+					'X-CSRF-TOKEN':metaToken
+				}
+		})
 		.then(function(response){
-			productAdd.products = response.data;
+			productAdd.products = response.data.list;
+			productAdd.pagination = response.data.pagination;
 		});
 	
 	},
@@ -68,22 +82,89 @@ var productAdd = new Vue({
 	},
 	computed:{
 		//discountPrice 계산 function
-		computeDiscount:function(){
+		computePrice:function(){
 			const price = this.product.price;
 			const rate = this.selectedDiscountRate / 100 ;
-			const result = (rate == "") ? price : price - ( price * rate );
+			const result = (rate == 0) ? price : price - ( price * rate );
 			this.product.discountPrice = result;
+			this.product.point = Math.floor(result * 0.05);
 			return result;
-		},
-		computePoint:function(){
-			const discountPrice = new Number(this.product.discountPrice);
-			
-			const point = (this.product.discountPrice == "") ? 0 : (Math.floor(discountPrice * 0.05));
-			this.product.point = point;
-			return point;
 		}
 	},
 	methods:{
+		deleteProduct:function(no){
+			console.log('delete', no);
+			axios.delete("/product/products/"+no,{
+				headers:{
+					'X-CSRF-TOKEN':metaToken
+				}
+			})
+			.then(function(response){
+				const isSuccess = response.data.isSuccess;
+				const msg = response.data.msg;
+				if(isSuccess == 'fail'){
+					alert(msg);
+				} else {
+					alert(msg);
+					productAdd.clearForm();
+					history.go(0);
+				}
+			})
+		},
+		getProduct:function(no){
+			productAdd.openForm();
+			this.btn.type = 'modify';
+			axios.get("/product/products/"+no,{
+				headers:{
+						'X-CSRF-TOKEN':metaToken
+				}
+			})
+			.then(function(response){
+				const data = response.data;
+				productAdd.product.no = data.no;
+				productAdd.product.name = data.name;
+				productAdd.product.category = data.category;
+				productAdd.product.discountPrice = data.discountPrice;
+				productAdd.product.price = data.price;
+				productAdd.product.point = data.point;
+				productAdd.product.amount = data.amount;
+				productAdd.product.explain = data.explain;
+				productAdd.product.tagArray = data.productTag;
+				const tagArray = data.productTag;
+				var tags = '';
+				if(tagArray.length > 0){
+					for(var i in tagArray){
+						var comma = ', ';
+						tags += tagArray[i].tag + ', ';
+					}
+				}
+				tags = tags.substring(0, tags.length - 2);
+				productAdd.productTags = tags;
+				productAdd.product.imagePath = data.productImage.imagePath;
+				productAdd.previewImgSrc = "/static/img/"+data.category+"/"+data.productImage.imagePath;
+				productAdd.previewImgName = data.productImage.imagePath.substring(13);
+			}); 	
+		},
+		//pagination 함수
+		movePage:function(pageNo){
+			
+			searchForm = new FormData();
+			searchForm.append('pageNo',pageNo);
+			searchForm.append('searchType',this.search.searchType);
+			searchForm.append('searchValue',this.search.searchValue);
+			axios.post("/product/products",searchForm, {
+			
+					headers:{
+						'X-CSRF-TOKEN':metaToken
+					}
+			})
+			.then(function(response){
+				productAdd.products = response.data.list;
+				productAdd.pagination = response.data.pagination;
+			});
+			
+		},
+	
 		//tags 배열처리 function
 		splitTags:function(){
 			this.product.tagArray = this.productTags.split(',');
@@ -107,7 +188,6 @@ var productAdd = new Vue({
 			const fileName = e.target.files[0].name;
 			
 			if(!fileName.match(reg)){
-				console.log('no image File');
 				alert('jpg, jpeg, png, gif, bmp 확장자 이미지 파일만 가능합니다.');
 				document.getElementById(e.target.id).value = '';
 				return;
@@ -122,6 +202,7 @@ var productAdd = new Vue({
 		},
 		//addForm 표시 여부 function
 		toggleForm:function(){
+			this.btn.type = 'new';
 			if(productAdd.addFormShow){
 				this.closeForm();
 			} else {
@@ -129,6 +210,7 @@ var productAdd = new Vue({
 			}
 		},
 		openForm:function(){
+			productAdd.clearForm();
 			productAdd.addFormShow = true;
 		},
 		closeForm:function(){
@@ -137,50 +219,60 @@ var productAdd = new Vue({
 		},
 		//product 객체 초기화
 		clearForm:function(){
-			productAdd.product = {};
+			productAdd.product = {	
+				name:"",
+				category:"",
+				price:"",
+				discountPrice:0,
+				point:0,
+				amount:"",
+				explain:"",
+				tagArray:[],
+				imagePath:"",
+				upload:""
+			};
 			this.productTags = "";
 			document.getElementById("product-image").value = '';
 			this.previewImgName = "파일을 선택하세요";
 			this.previewImgSrc = "/static/img/main/no_detail_img.jpg";
 		},
+		updateProduct:function(no){
+			productAdd.checkFunction();
+			
+			this.product.tagArray = this.productTags.split(',');
+			
+			const formData = new FormData();
+			formData.append('no', no);
+			formData.append('name', this.product.name);
+			formData.append('category', this.product.category);
+			formData.append('price', this.product.price);
+			formData.append('discountPrice', this.product.discountPrice);
+			formData.append('point', this.product.point);
+			formData.append('amount', this.product.amount);
+			formData.append('explain', this.product.explain);
+			formData.append('tagArray', this.product.tagArray);
+			formData.append('imagePath', this.product.imagePath);
+			formData.append('upload -->', this.product.upload);
+			axios.put('/product/update', formData,{
+				headers:{
+					'Content-Type':'multipart/form-data',
+					'X-CSRF-TOKEN':metaToken
+				}
+			}).then(function(response){
+				const isSuccess = response.data.isSuccess;
+				const msg = response.data.msg;
+				if(isSuccess == 'fail'){
+					alert(msg);
+				} else {
+					alert(msg);
+					productAdd.clearForm();
+					history.go(0);
+				}
+			});
+		},
 		addProduct:function(){
-			this.error.errorType = '';
-			if(productAdd.product.name == ""){
-				console.log("상품 이름을 입력해주세요");
-				this.error.errorType = 'name';
-				this.error.errorMsg = '상품이름을 입력해주세요';
-				return;
-			}
-			if(productAdd.product.category == ""){
-				this.error.errorType = 'category';
-				this.error.errorMsg = '카테고리를 입력해주세요';
-				console.log("카테고리를 입력해주세요");
-				return;
-			}
-			if(productAdd.product.price == ""){
-				this.error.errorType = 'price';
-				this.error.errorMsg = '가격을 입력해주세요';
-				console.log("가격을 입력해주세요");
-				return;
-			}
-			if(productAdd.product.point == ""){
-				this.error.errorType = 'point';
-				this.error.errorMsg = '포인트를 입력해주세요';
-				console.log("포인트를 입력해주세요");
-				return;
-			}
-			if(productAdd.product.amount == ""){
-				this.error.errorType = 'amount';
-				this.error.errorMsg = '수량을 입력해주세요';
-				console.log("입고 수량을 입력해주세요");
-				return;
-			}
-			if(productAdd.product.imagePath == ""){
-				this.error.errorType = 'image';
-				this.error.errorMsg = '이미지를 등록해주세요';
-				console.log("이미지를 등록해주세요");
-				return;
-			}
+			
+			productAdd.checkFunction();
 			
 			this.product.tagArray = this.productTags.split(',');
 			
@@ -208,6 +300,7 @@ var productAdd = new Vue({
 				} else {
 					alert(msg);
 					productAdd.clearForm();
+					history.go(0);
 				}
 			});
 		},
@@ -217,6 +310,41 @@ var productAdd = new Vue({
 		},
 		fileSelect:function(){
 			this.product.upload = this.$refs.upload.files[0];
+		},
+		checkFunction:function(){
+			
+			this.error.errorType = '';
+			
+			if(productAdd.product.name == ""){
+				this.error.errorType = 'name';
+				this.error.errorMsg = '상품이름을 입력해주세요';
+				return;
+			}
+			if(productAdd.product.category == ""){
+				this.error.errorType = 'category';
+				this.error.errorMsg = '카테고리를 입력해주세요';
+				return;
+			}
+			if(productAdd.product.price == ""){
+				this.error.errorType = 'price';
+				this.error.errorMsg = '가격을 입력해주세요';
+				return;
+			}
+			if(productAdd.product.point == ""){
+				this.error.errorType = 'point';
+				this.error.errorMsg = '포인트를 입력해주세요';
+				return;
+			}
+			if(productAdd.product.amount == ""){
+				this.error.errorType = 'amount';
+				this.error.errorMsg = '수량을 입력해주세요';
+				return;
+			}
+			if(productAdd.product.imagePath == ""){
+				this.error.errorType = 'image';
+				this.error.errorMsg = '이미지를 등록해주세요';
+				return;
+			}
 		}
 	}
 	

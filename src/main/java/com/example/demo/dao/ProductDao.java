@@ -17,7 +17,12 @@ public interface ProductDao {
 	void insertImage(ProductImage productImage);
 	void insertTag(ProductTag productTag);
 	List<ProductDTO> getAllProducts(Map<String, Object> map);
-	ProductImage getProductImage(int no);
-	List<ProductTag> getProductTags(int no);
+	ProductImage getProductImageByNo(int no);
+	List<ProductTag> getProductTagsByNo(int no);
+	ProductDTO getProductByNo(int no);
 	
+	void update(Product product);
+	void deleteImagePathByNo(int no);
+	void deleteTagsByNo(int no);
+	void delete(int no);
 }

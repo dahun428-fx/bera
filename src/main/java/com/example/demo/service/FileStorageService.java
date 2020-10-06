@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -22,6 +23,7 @@ import com.example.demo.property.FileStorageProperties;
 public class FileStorageService {
 
 	private final Path fileStorageLocation;
+	private String directory;
 	
 	@Autowired
 	public FileStorageService(FileStorageProperties fileStorageProperties) {
@@ -35,12 +37,16 @@ public class FileStorageService {
 	}
 	public String storeFile(MultipartFile file) {
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-		fileName = System.currentTimeMillis() + fileName;
+		fileName = System.currentTimeMillis() + fileName.replaceAll(" ", "");
 		
 		try {
 			if(fileName.contains("..")) throw new FileUploadException("파일명에 부적합한 문자가 포함되어 있습니다 " +  fileName);
 				
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Path targetLocation = this.fileStorageLocation.resolve(
+					(this.getDirectory() == null) ? "": this.getDirectory() + "/" + fileName);
+			
+			System.out.println("targetLocation :" + targetLocation);
+			System.out.println("category : " + this.getDirectory());
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 			
 			return fileName;
@@ -64,6 +70,12 @@ public class FileStorageService {
 			throw new FileDownloadException(fileName + "파일을 찾을 수 없습니다.", e);
 		}
 		
+	}
+	public String getDirectory() {
+		return directory;
+	}
+	public void setDirectory(String directory) {
+		this.directory = directory;
 	}
 	
 }

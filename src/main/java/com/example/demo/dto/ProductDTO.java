@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.demo.vo.ProductImage;
 import com.example.demo.vo.ProductTag;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ProductDTO {
 
@@ -15,6 +16,7 @@ public class ProductDTO {
 	private double point;
 	private double discountPrice;
 	private String category;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date regDate;
 	private int reviews;
 	private String explain;

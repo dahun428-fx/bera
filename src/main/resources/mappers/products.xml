@@ -36,10 +36,25 @@
 		<result property="regDate" column="regDate"/>
 		<result property="reviews" column="reviews"/>
 		<result property="explain" column="explain"/>
-		<association property="no" column="productImage" select="getProductImage"></association>
-		<collection property="no" column="productTag" select="getProductTags"></collection>
+		<association property="productImage" column="no" select="getProductImageByNo"/>
+		<collection property="productTag" column="no" select="getProductTagsByNo"/>
 	</resultMap>
+	<select id="getProductByNo" parameterType="int" resultMap="ProductDTOMap">
+		SELECT 
+			A.product_no 			AS "no",
+			A.`name`,
+			A.amount,
+			A.price,
+			A.`POINT`,
+			A.discount_price		AS "discountPrice",
+			A.category,
+			A.reg_date 			AS "regDate",
+			A.reviews,
+			A.explain
+		FROM br_products A
+		WHERE A.product_no = #{value}
 	
+	</select>
 	
 	<select id="getAllProducts" parameterType="map" resultMap="ProductDTOMap">
 	
@@ -55,24 +70,22 @@
 			A.reviews,
 			A.explain
 	FROM br_products A
-	<if test="searchType != null and searchValue != null">
-		<where>
-			<choose>
+	<if test="searchType != '' and searchValue != '' ">
+		<choose>
 				<when test="searchType == 'name' ">
-					name like '%'#{searchValue}'%'
+					WHERE name like concat ('%',#{searchValue},'%')
 				</when>
 				<when test="searchType == 'category' ">
-					category like '%'#{searchValue}'%'
+					WHERE category like concat ('%',#{searchValue},'%')
 				</when>
 				<when test="searchType == 'tag' ">
 					JOIN br_product_tag B ON A.product_no = B.product_no
-					WHERE B.product_tag LIKE '%'#{seachValue}'%'
+					WHERE B.product_tag LIKE concat ('%',#{searchValue},'%')
 				</when>
-			</choose>
-		</where>
+		</choose>
 	</if>
 	
-	ORDER BY reg_date DESC 
+	ORDER BY A.product_no DESC 
 	<if test="pagination != null">
 	
 	LIMIT #{pagination.beginIndex}, #{pagination.endIndex}
@@ -81,7 +94,7 @@
 	
 	
 	</select>
-	<select id="getProductImage" parameterType="int" resultType="ProductImage">
+	<select id="getProductImageByNo" parameterType="int" resultType="com.example.demo.vo.ProductImage">
 		SELECT
 			product_no 		as "no",
 			image_path 		as "imagePath"
@@ -90,7 +103,7 @@
 		WHERE
 			product_no = #{value}
 	</select>
-	<select id="getProductTags" parameterType="int" resultType="ProductTag">
+	<select id="getProductTagsByNo" parameterType="int" resultType="com.example.demo.vo.ProductTag">
 		SELECT
 			product_no 		AS "no",
 			product_tag 	AS "tag"
@@ -99,5 +112,32 @@
 		WHERE
 			product_no = #{value}
 	</select>
+	<update id="update"	parameterType="Product">
+		UPDATE
+			br_products
+		SET 
+			`name` = #{name},
+			amount = #{amount},
+			price = #{price},
+			`point` = #{point},
+			discount_price = #{discountPrice},
+			category = #{category},
+			`EXPLAIN` = #{explain}
+		WHERE
+			product_no = #{no}
+	</update>
+	<delete id="delete" parameterType="int">
+		DELETE FROM br_products
+		WHERE product_no = #{value}
+	</delete>
+	<delete id="deleteTagsByNo" parameterType="int">
+		DELETE FROM br_product_tag
+		WHERE product_no = #{value}
+	</delete>
+	<delete id="deleteImagePathByNo" parameterType="int">
+		DELETE FROM br_product_tag
+		WHERE product_no = #{value}
+	
+	</delete>
 	
 </mapper>

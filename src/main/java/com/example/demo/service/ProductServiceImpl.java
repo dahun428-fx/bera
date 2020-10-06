@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dao.ProductDao;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.form.ProductForm;
+import com.example.demo.form.SearchForm;
 import com.example.demo.vo.Pagination;
 import com.example.demo.vo.Product;
 import com.example.demo.vo.ProductImage;
@@ -26,15 +27,70 @@ public class ProductServiceImpl implements ProductService{
 	private FileStorageService fileService;
 	
 //	private static final String location = "C:\\APP\\spring-workspace\\bera\\src\\main\\resources\\static\\upload\\img";
-	@Override
-	public List<ProductDTO> list() {
-		Map<String, Object> map = new HashMap<>();
+
+	
+	public ProductDTO get(int productNo) {
+		System.out.println(productDao.getProductImageByNo(productNo));
+		System.out.println(productDao.getProductTagsByNo(productNo));
+		return productDao.getProductByNo(productNo);
+	}
+	public int totalListCount(Map<String, Object> param) {
+		List<ProductDTO> products = productDao.getAllProducts(param);
+		int totalCount = products.size();
+		return totalCount;
+	}
+	@Transactional
+	public Map<String, Object> delete(int no) {
+		Map<String, Object> resultMap = new HashMap<>();
 		
-		//Pagination pagination = new Pagination(rowsPerPage, pagesPerBlock, pageNo, totalRows);
+		ProductDTO savedProduct = productDao.getProductByNo(no);
+		if(savedProduct == null) {
+			resultMap.put("isSuccess", "fail");
+			resultMap.put("msg", "해당 상품이 없습니다. 삭제에 실패하였습니다.");
+			return resultMap;
+		}
+		ProductImage savedImage = productDao.getProductImageByNo(no);
+		if(savedImage == null) {
+			resultMap.put("isSuccess", "fail");
+			resultMap.put("msg", "해당 상품의 이미지가 없습니다. 삭제에 실패하였습니다.");
+			return resultMap;
+		}
 		
-		return productDao.getAllProducts(map);
+		productDao.delete(no);
+		productDao.deleteImagePathByNo(no);
+		productDao.deleteTagsByNo(no);
+		
+		resultMap.put("isSuccess", "success");
+		resultMap.put("msg", "삭제되었습니다.");
+		return resultMap;
 	}
 	
+	public Map<String, Object> list(Map<String, Object> map) {
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		Map<String, Object> param = new HashMap<>();
+		SearchForm searchForm = (SearchForm) map.get("searchForm");
+		if(searchForm != null) {
+			
+			param.put("searchType", searchForm.getSearchType());
+			param.put("searchValue", searchForm.getSearchValue());
+			
+		}
+		int totalRows = this.totalListCount(param);
+		int rowsPerPage = 5;
+		int pagesPerBlock = 5;
+		int pageNo = (searchForm != null) ? searchForm.getPageNo() : 1;
+		
+		Pagination pagination = new Pagination(rowsPerPage, pagesPerBlock, pageNo, totalRows);
+		pagination.setEndIndex(5);
+		param.put("pagination", pagination);
+		List<ProductDTO> list = productDao.getAllProducts(param);
+		
+		resultMap.put("list", list);
+		resultMap.put("pagination", pagination);
+		
+		return resultMap;
+	}
 	
 	@Transactional
 	public Map<String, Object> add(ProductForm productForm) {
@@ -48,7 +104,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		Product product = new Product();
 		product.setName(productForm.getName());
-		product.setAmount(product.getAmount());
+		product.setAmount(productForm.getAmount());
 		product.setPrice(productForm.getPrice());
 		product.setPoint(productForm.getPoint());
 		product.setDiscountPrice(productForm.getDiscountPrice());
@@ -63,22 +119,75 @@ public class ProductServiceImpl implements ProductService{
 			resultMap.put("msg", "등록에 실패하였습니다.");
 			return resultMap;
 		}
+		
+		
+		fileService.setDirectory(productForm.getCategory());
 		String filename = fileService.storeFile(upFile);
 		productForm.setImagePath(filename);
 		productImage.setNo(product.getNo());
 		productImage.setImagePath(productForm.getImagePath());
 		productDao.insertImage(productImage);
 		
-		String[] tags = productForm.getTagArray();
-		ProductTag productTag = new ProductTag();
-		productTag.setNo(product.getNo());
-		productTag.setTags(tags);
-		System.out.println("tags : " + productTag);
-		productDao.insertTag(productTag);
+		if(productForm.getTagArray().length > 0) {
+			
+			String[] tags = productForm.getTagArray();
+			ProductTag productTag = new ProductTag();
+			productTag.setNo(product.getNo());
+			productTag.setTags(tags);
+			productDao.insertTag(productTag);
+		}
 		
 		resultMap.put("isSuccess", "success");
 		resultMap.put("msg", "등록되었습니다.");
 		return resultMap;
 		
 	}
+	@Transactional
+	public Map<String, Object> update(ProductForm productForm) {
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		Product product = new Product();
+		product.setNo(productForm.getNo());
+		product.setName(productForm.getName());
+		product.setAmount(productForm.getAmount());
+		product.setPrice(productForm.getPrice());
+		product.setDiscountPrice(productForm.getDiscountPrice());
+		product.setCategory(productForm.getCategory());
+		product.setExplain(productForm.getExplain());
+		productDao.update(product);
+		
+		String savedImagePath = productDao.getProductImageByNo(product.getNo()).getImagePath();
+		
+		if(!savedImagePath.equals(productForm.getImagePath())) {
+			productDao.deleteImagePathByNo(product.getNo());
+			
+			ProductImage productImage = new ProductImage();
+			MultipartFile upFile = productForm.getUpload();
+			if(upFile == null) {
+				resultMap.put("isSuccess", "fail");
+				resultMap.put("msg", "수정에 실패했습니다.");
+				return resultMap;
+			}
+			fileService.setDirectory(product.getCategory());
+			String imagePath = fileService.storeFile(upFile);
+			productForm.setImagePath(imagePath);
+			productImage.setNo(productForm.getNo());
+			productImage.setImagePath(productForm.getImagePath());
+			productDao.insertImage(productImage);
+		}
+		productDao.deleteTagsByNo(productForm.getNo());
+		
+		if(productForm.getTagArray().length > 0) {
+			String[] tags = productForm.getTagArray();
+			ProductTag productTag = new ProductTag();
+			productTag.setNo(product.getNo());
+			productTag.setTags(tags);
+			productDao.insertTag(productTag);
+		}
+		
+		resultMap.put("isSuccess", "success");
+		resultMap.put("msg", "수정 완료되었습니다.");
+		return resultMap;
+	}
+	
 }
