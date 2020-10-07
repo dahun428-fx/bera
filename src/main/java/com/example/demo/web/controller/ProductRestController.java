@@ -72,6 +72,7 @@ public class ProductRestController {
 	@PutMapping("/update")
 	@ResponseBody
 	public Map<String, Object> updateProducts(ProductForm productForm){
+		System.out.println("controller product form : " + productForm);
 		return productService.update(productForm);
 	}
 	@DeleteMapping("/products/{no}")

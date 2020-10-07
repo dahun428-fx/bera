@@ -2,13 +2,21 @@
 <html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layouts/layout}">
-<div layout:fragment="body" class="body mt-5" id="productApp">
+<div layout:fragment="body" class="body" id="productApp">
 
             <div class="list-banner">
                 <!-- 카테고리에 따라서 배너 이미지 바꾸기 -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img class="list-banner-img" src="../image/" />
+                     <span th:if="${uriType eq 'icecream' }">
+                        <img class="list-banner-img w-100" src="/static/img/event/banner/list-banner-img-cream.jpg" />
+                    </span>
+                    <span th:if="${uriType eq 'cake' }">
+                        <img class="list-banner-img w-100" src="/static/img/event/banner/list-banner-img-cake.jpg" />
+                    </span>
+                    <span th:if="${uriType eq 'main' }">
+                        <img class="list-banner-img w-100" src="/static/img/event/banner/list-banner-img-main.jpg" />
+                    </span>
                     </div>
                 </div>
                 <!-- banner end -->
@@ -22,20 +30,15 @@
                         <h4 class="display-4 text-center">BEST ITEM</h4>
                         <hr />
                         <div class="row">
-
-                            <div class="col-2 text-center">
+                            <div class="col-2 text-center" v-for="product in bestProducts">
                                 <span class="badge badge-pill badge-info">위</span>
-                                <!-- product-detail-page-move -->
-                                <a href="#">
-                                    <!-- product-detail-page-move --> <img class="img-thumbnail" src="">
-                                </a>
-                                <div class="title text-center">
-                                    <p>
-                                        <!-- product-detail-page-move -->
-                                        <a href="#"></a>
-                                        <!-- product-detail-page-move -->
-                                    </p>
+                                <div class="rounded-circle" style="overflow: hidden; border: 1px solid gray; height: 125px;" >
+                                	<img class="ice-img-top"
+                                	:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" />
+                                	<img class="ice-img-bottom"
+									src="/static/img/main/icecream-bottom.png" alt="" />
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -66,9 +69,11 @@
 												:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" 
 												class="ice-img-top-list"
 												/>
+												<template v-if="product.category == 'icecream' ">
 												 <img
 													class="ice-img-bottom-list"
 													src="/static/img/main/icecream-bottom.png" alt="" />
+												</template>	
 											</div>
 										</div>
 									</template>

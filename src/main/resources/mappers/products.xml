@@ -91,8 +91,14 @@
 		WHERE A.category IN (#{listType})
 		AND A.isAvailable IN ('Y')
 	</if>
-	
-	ORDER BY A.product_no DESC 
+	<choose>
+		<when test="orderby != null and orderby == 'best' ">
+			ORDER BY A.reg_date DESC
+		</when>
+		<otherwise>
+			ORDER BY A.product_no DESC 
+		</otherwise>
+	</choose>
 	<if test="pagination != null">
 	
 	LIMIT #{pagination.beginIndex}, #{pagination.endIndex}

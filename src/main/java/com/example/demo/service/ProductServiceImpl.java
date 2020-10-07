@@ -87,12 +87,12 @@ public class ProductServiceImpl implements ProductService{
 		System.out.println("formType : " + searchForm.getFormType());
 		System.out.println("listType : " + searchForm.getListType());
 		int totalRows = this.totalListCount(param);
-		int rowsPerPage = ("user".equals(searchForm.getFormType())) ? 5 : 5;
-		int pagesPerBlock = ("user".equals(searchForm.getFormType())) ? 5 : 5;
-		int pageNo = (searchForm != null) ? searchForm.getPageNo() : 1;
+		int rowsPerPage = (searchForm.getRowsPerPage() != 0) ? searchForm.getRowsPerPage() : 5;
+		int pagesPerBlock = (searchForm.getPagesPerBlock() != 0) ? searchForm.getPagesPerBlock(): 5;
+		int pageNo = (searchForm.getPageNo() != 0) ? searchForm.getPageNo() : 1;
 		
 		Pagination pagination = new Pagination(rowsPerPage, pagesPerBlock, pageNo, totalRows);
-		int endIndex = ("user".equals(searchForm.getFormType())) ? 25 : 5;
+		int endIndex = (searchForm.getEndIndex() != 0) ? searchForm.getEndIndex() : 5;
 		pagination.setEndIndex(endIndex);
 		System.out.println("endIndex : " + endIndex);
 		param.put("pagination", pagination);
@@ -158,7 +158,6 @@ public class ProductServiceImpl implements ProductService{
 	public Map<String, Object> update(ProductForm productForm) {
 		Map<String, Object> resultMap = new HashMap<>();
 		
-		System.out.println("productForm.getIsAvailable() : " + productForm.getIsAvailable()); 
 		if(productForm.getIsAvailable() != null) {
 			
 			Product product = new Product();
@@ -172,11 +171,11 @@ public class ProductServiceImpl implements ProductService{
 			return resultMap;
 		}
 		
-		System.out.println("productForm.getIsAvailable() : " + productForm.getIsAvailable()); 
 		Product product = new Product();
 		product.setNo(productForm.getNo());
 		product.setName(productForm.getName());
 		product.setAmount(productForm.getAmount());
+		product.setPoint(productForm.getPoint());
 		product.setPrice(productForm.getPrice());
 		product.setDiscountPrice(productForm.getDiscountPrice());
 		product.setCategory(productForm.getCategory());

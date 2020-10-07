@@ -37,6 +37,8 @@ var productAdd = new Vue({
 		},
 		//discuntRates 에서 선택된 rate
 		selectedDiscountRate:"",
+		pointRates:[5,10,15,20],
+		selectedPointRate:0.05,
 		//option list discountRates
 		discountRates:[0,5,10,15,20,25,30,35,40,45,50,55,60,65,70],
 		//radio에서 선택된 value가 price or rate 인지 구별
@@ -99,11 +101,11 @@ var productAdd = new Vue({
 	computed:{
 		//discountPrice 계산 function
 		computePrice:function(){
-			const price = this.product.price;
-			const rate = this.selectedDiscountRate / 100 ;
-			const result = (rate == 0) ? price : price - ( price * rate );
-			this.product.discountPrice = result;
-			this.product.point = Math.floor(result * 0.05);
+			//const price = this.product.price;
+			//const rate = this.selectedDiscountRate / 100 ;
+			//const result = (rate == 0) ? price : price - ( price * rate );
+			//this.product.discountPrice = result;
+			//this.product.point = Math.floor(result * 0.05);
 			return result;
 		}
 	},
@@ -136,6 +138,7 @@ var productAdd = new Vue({
 			})
 			.then(function(response){
 				const data = response.data;
+				console.log(data);
 				productAdd.product.no = data.no;
 				productAdd.product.name = data.name;
 				productAdd.product.category = data.category;
@@ -402,6 +405,13 @@ var productAdd = new Vue({
 					history.go(0);
 				}
 			})
+		},
+		autoCompute:function(){
+			const price = productAdd.product.price;
+			const rate = productAdd.selectedDiscountRate / 100 ;
+			const result = (rate == 0) ? price : price - ( price * rate );
+			productAdd.product.discountPrice = result;
+			productAdd.product.point = Math.floor(result * this.selectedPointRate);
 		}
 	}
 	

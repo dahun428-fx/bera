@@ -16,6 +16,11 @@ public class PageController {
 	public String joinForm() {
 		return "view/user/join";
 	}
+	@GetMapping("/main")
+	public String mainList(Model model) {
+		model.addAttribute("uriType", "main");
+		return "view/product/list";
+	}
 	@GetMapping("/icecream")
 	public String icecreamList(Model model) {
 		model.addAttribute("uriType", "icecream");

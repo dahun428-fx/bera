@@ -8,32 +8,45 @@ var app = new Vue({
 	el:"#productApp",
 	data:{
 		products:[],
-		search:{
-		},
-		productTags:[]
+		productTags:[],
+		bestProducts:[]
 	},
 	beforeCreate:function(){
 		let category = document.getElementById('uriType').value;
 		
-		console.log(category);
 		searchForm = new FormData();
 		searchForm.append('pageNo',1);
 		searchForm.append('category',category);
+		searchForm.append('rowsPerPage', 5);
+		searchForm.append('pagesPerBlock',5);
+		searchForm.append('endIndex', 25);
 		searchForm.append('formType', 'user');
 		searchForm.append('listType', category);
 		axios.post('/product/products', searchForm,{
 			headers:{'X-CSRF-TOKEN':metaToken}
 		})
 		.then(function(response){
-			const list = response.data.list;
-			app.products = list;
-			console.log(app.products);
-			for(var i in list){
-				let tagArray = list[i].productTag;
-				console.log(tagArray);
-			}
-			
+			app.products = response.data.list;
 		})
+		
+		searchFormBest = new FormData();
+		searchFormBest.append('pageNo',1);
+		searchFormBest.append('category', category);
+		searchFormBest.append('rowsPerPage', 5);
+		searchFormBest.append('pagesPerBlock', 5);
+		searchFormBest.append('endIndex', 6);
+		searchFormBest.append('formType', 'user');
+		searchFormBest.append('listType', category);
+		axios.post('/product/products',searchFormBest,{
+			headers:{'X-CSRF-TOKEN':metaToken}
+		})
+		.then(function(response){
+			console.log(response.data);
+			app.bestProducts = response.data.list;
+			
+		});
+		
+		
 	},
 	methods:{
 		product:function(){

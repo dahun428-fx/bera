@@ -7,6 +7,10 @@ public class SearchForm {
 	private String searchValue;
 	private String formType;
 	private String listType;
+	private String orderby;
+	private int rowsPerPage;
+	private int pagesPerBlock;
+	private int endIndex;
 	
 	public SearchForm() {
 	}
@@ -51,10 +55,46 @@ public class SearchForm {
 		this.listType = listType;
 	}
 
+	public String getOrderby() {
+		return orderby;
+	}
+
+	public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
+	
+	public int getRowsPerPage() {
+		return rowsPerPage;
+	}
+
+	public void setRowsPerPage(int rowsPerPage) {
+		this.rowsPerPage = rowsPerPage;
+	}
+
+	public int getPagesPerBlock() {
+		return pagesPerBlock;
+	}
+
+	public void setPagesPerBlock(int pagesPerBlock) {
+		this.pagesPerBlock = pagesPerBlock;
+	}
+
+	public int getEndIndex() {
+		return endIndex;
+	}
+
+	public void setEndIndex(int endIndex) {
+		this.endIndex = endIndex;
+	}
+
 	@Override
 	public String toString() {
-		return "SearchForm [pageNo=" + pageNo + ", searchType=" + searchType + ", searchValue=" + searchValue + "]";
+		return "SearchForm [pageNo=" + pageNo + ", searchType=" + searchType + ", searchValue=" + searchValue
+				+ ", formType=" + formType + ", listType=" + listType + ", orderby=" + orderby + ", rowsPerPage="
+				+ rowsPerPage + ", pagesPerBlock=" + pagesPerBlock + ", endIndex=" + endIndex + "]";
 	}
+
+	
 	
 	
 }
