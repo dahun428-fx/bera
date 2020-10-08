@@ -98,17 +98,6 @@ var productAdd = new Vue({
 			return v.toLocaleString('en');
 		}
 	},
-	computed:{
-		//discountPrice 계산 function
-		computePrice:function(){
-			//const price = this.product.price;
-			//const rate = this.selectedDiscountRate / 100 ;
-			//const result = (rate == 0) ? price : price - ( price * rate );
-			//this.product.discountPrice = result;
-			//this.product.point = Math.floor(result * 0.05);
-			return result;
-		}
-	},
 	methods:{
 		deleteProduct:function(no){
 			axios.delete("/product/products/"+no,{

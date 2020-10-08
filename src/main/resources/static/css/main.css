@@ -69,12 +69,23 @@ a:hover{
 	top: -80px;
 	margin: 0 auto;
 }
+.ice-img-top-detail{
+	position: relative;
+	z-index: 1;
+	margin: 0 auto;
+}
+.ice-img-bottom-detail{
+	position: relative;
+	top: -200px;
+	margin: 0 auto;
+}
 .ice-img-bottom {
 	position: relative;
 	width: 60px;
 	top: -60px;
 	margin: 0 auto;
 }
+
 .event-list {
 	margin-top: 100px;
 }

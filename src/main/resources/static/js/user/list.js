@@ -11,7 +11,14 @@ var app = new Vue({
 		productTags:[],
 		bestProducts:[],
 		backgroundColors:['#FFB6C1','#FAC87D','#FF7F50','#369F36','#FAC87D','#FF7F50'],
-		activeColor:"#FFB6C1"
+		pagination:{
+			pageNo:"",
+			totalPages:"",
+			beginPage:"",
+			endPage:"",
+			beginIndex:"",
+			endIndex:""
+		}
 	},
 	beforeCreate:function(){
 		let category = document.getElementById('uriType').value;
@@ -21,7 +28,7 @@ var app = new Vue({
 		searchForm.append('category',category);
 		searchForm.append('rowsPerPage', 5);
 		searchForm.append('pagesPerBlock',5);
-		searchForm.append('endIndex', 25);
+		searchForm.append('endIndex', 16);
 		searchForm.append('formType', 'user');
 		searchForm.append('listType', category);
 		axios.post('/product/products', searchForm,{
@@ -29,6 +36,13 @@ var app = new Vue({
 		})
 		.then(function(response){
 			app.products = response.data.list;
+			const pagination = response.data.pagination;
+			app.pagination.pageNo = pagination.pageNo;
+			app.pagination.totalPages = pagination.totalPages;
+			app.pagination.beginPage = pagination.beginPage;
+			app.pagination.endPage = pagination.endPage;
+			app.pagination.beginIndex = pagination.beginIndex;
+			app.pagination.endIndex = pagination.endIndex;
 		})
 		
 		searchFormBest = new FormData();
@@ -43,20 +57,41 @@ var app = new Vue({
 			headers:{'X-CSRF-TOKEN':metaToken}
 		})
 		.then(function(response){
-			console.log(response.data);
 			app.bestProducts = response.data.list;
-			
 		});
 		
 		
 	},
 	methods:{
-		product:function(){
+		movePage:function(pageNo){
+			console.log(pageNo);
+			let category = document.getElementById('uriType').value;
+			searchForm = new FormData();
+			searchForm.append('pageNo',pageNo);
+			searchForm.append('category',category);
+			searchForm.append('rowsPerPage', 5);
+			searchForm.append('pagesPerBlock',5);
+			searchForm.append('endIndex', 16);
+			searchForm.append('formType', 'user');
+			searchForm.append('listType', category);
 			
+			axios.post('/product/products', searchForm,{
+				headers:{'X-CSRF-TOKEN':metaToken}
+			})
+			.then(function(response){
+				console.log(response.data);
+				const products = response.data.list;
+				const pagination = response.data.pagination;
+				app.products = products;
+				app.pagination.pageNo = pagination.pageNo;
+			})
 		},
-		changeColor:function(index){
-			app.activeColor = app.backgroundColors[index];
+		buyAction(e){
+			e.preventDefault()
+			alert('hi');
 		}
+		
+		
 	}
 	
 	

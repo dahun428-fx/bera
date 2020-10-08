@@ -32,16 +32,19 @@
                         <div class="row">
                             <div class="col-2 text-center" 
                             v-for="(product, index) in bestProducts">
+                            	<a :href="'/menu/'+product.no" style="display: block;">
                                 <span class="badge badge-pill badge-info">{{index + 1 }}위</span>
                                 <div class="rounded-circle best-hidden border border-light"
-                                v-bind:style="{ backgroundColor:activeColor }" 
-                                v-model="changeColor(index)">
+                                :style="{ 'backgroundColor':backgroundColors[index] }" 
+                                >
                                 	<img class="ice-img-top"
                                 	:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" />
                                 	<img class="ice-img-bottom-list"
-									src="/static/img/main/icecream-bottom.png" alt="" />
+									src="/static/img/main/icecream-bottom.png"
+									v-if="product.category == 'icecream' "/>
                                 </div>
-                                <p class="text-muted">{{product.name}}</p>
+                                <p class="text-muted mt-3">{{product.name}}</p>
+                            	</a>
                             </div>
                         </div>
                     </div>
@@ -58,6 +61,7 @@
 								<div class="row">
 									<template v-for="product in products">
 										<div class="col-3 mt-4">
+											<a :href="'/menu/'+product.no" style="display: block;">
 											<div class="card" style="overflow: hidden; height: 290px;">
 												<div class="h4 text-center mt-4">{{product.name}}</div>
 												<span class="ml-2 text-center">
@@ -66,26 +70,31 @@
 													</template>
 												</span>
 												<div class="text-center mt-1">
-													<button class="btn btn-secondary btn-sm">구매</button>
+													<button @click.stop="buyAction" type="button" class="btn btn-secondary btn-sm">구매</button>
 												</div>
 												<img 
 												:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" 
 												class="ice-img-top-list"
 												/>
-												<template v-if="product.category == 'icecream' ">
 												 <img
-													class="ice-img-bottom-list"
-													src="/static/img/main/icecream-bottom.png" alt="" />
-												</template>	
+												class="ice-img-bottom-list"
+												src="/static/img/main/icecream-bottom.png"
+												v-if="product.category == 'icecream' "/>
 											</div>
+											</a>
 										</div>
 									</template>
 								</div>
 							</div>
                             <!-- product -->
                         </div>
-                        <ul class="pagination justify-content-center" style="margin: 20px 0">
-                        </ul>
+	                        <ul class="pagination pagination-lg justify-content-center" style="margin: 20px 0">
+								<li class="page-item"
+								 v-for="page in pagination.endPage"
+								 :class="(page == pagination.pageNo) ? 'active': ''">
+								 <a class="page-link" 
+								 @click="movePage(page)">{{page}}</a></li>
+							</ul>
                         <!-- product list -->
                     </div>
                 </div>
@@ -100,3 +109,4 @@
 <th:block layout:fragment="script">
 <script src="/static/js/user/list.js"></script>
 </th:block>
+</html>

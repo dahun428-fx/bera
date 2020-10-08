@@ -3,6 +3,7 @@ package com.example.demo.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Controller
@@ -31,7 +32,15 @@ public class PageController {
 		model.addAttribute("uriType", "cake");
 		return "view/product/list";
 	}
-	
+	@GetMapping("/menu/{no}")
+	public String productDetail(@PathVariable("no") int productNo, Model model) {
+		model.addAttribute("productNo", productNo);
+		return "view/product/detail";
+	}
+	@GetMapping("/order")
+	public String order() {
+		return "view/order/order";
+	}
 	@GetMapping("/admin/addForm")
 	public String productAddForm() {
 		return "/view/product/addForm";

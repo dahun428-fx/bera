@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body" id="app">
+			<div class="container mt-5">
+				<!-- product detail -->
+				<div class="row">
+					<div class="col-12">
+						<div class="content-header text-center">
+							<span class="color-pink"><i class="fas fa-ice-cream fa-5x"></i></span>
+							<!-- product name -->
+							<h4 class="display-4 text-center">{{product.name}}</h4>
+							<!-- product detail -->
+							<p class="color-gray-pink">{{product.explain}}</p>
+						</div>
+					</div>
+					<div class="col-12 text-center" style="height: 500px; overflow: hidden;">
+							<!-- product img -->
+							<img
+							:src="icecreamImage" 
+							class="ice-img-top-detail"
+							/>
+						<div>
+							<img src="/static/img/main/icecream-bottom.png"
+								class="ice-img-bottom-detail"
+								v-if="product.category == 'icecream' "/>
+						</div>
+					</div>
+					<div class="col-12 text-center">
+						<div class="product-detail-btn" >
+							<a href="#"
+								type="button" class="btn btn-primary btn-lg" style="border-radius: 50px; background-color: #ff69b4; 
+																					border-color: #ff69b4; width: 200px;">구매하기</a>
+							<!-- 구매하기 버튼 get 방식으로 url 보내기 -->
+						</div>
+						<hr />
+						<div class="pack-info">
+							<img src="/static/img/main/bera-pack-info.JPG"/>
+						</div>
+					</div>
+					<!-- review start -->
+					<!-- review end -->
+					<div class="col-12 list-box">
+			         <hr />
+					</div>
+					<div class="col-12 list-box text-center" style="margin-top: 20px;">
+						<a href="#"
+							class="btn btn-outline-primary btn-lg">목록으로</a>
+					</div>			
+					<div class="col-12 list-box">
+					</div>
+				</div>
+			</div>
+			<input type="hidden" id="productNo" th:value="${productNo }" />
+		</div>
+<th:block layout:fragment="script">
+<script src="/static/js/user/detail.js"></script>
+</th:block>		
+</html>
