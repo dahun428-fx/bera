@@ -34,7 +34,11 @@ a:hover{
 	color: #ff69b4;
 	text-decoration: none;
 }
-
+.best-hidden{
+	overflow: hidden;
+	border: 1px solid gray;
+	height: 150px;
+}
 .header {
 	background-color: #FDF5E6;
 }

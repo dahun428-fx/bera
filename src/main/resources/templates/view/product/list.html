@@ -25,20 +25,23 @@
 
                 <div class="row">
                     <!-- monthly best item -->
-                    <div class="col-12">
+                    <div class="col-12 mt-5">
                         <!-- 카테고리가 ice cream 일경우에만 best item 뜨게 만들기 -->
                         <h4 class="display-4 text-center">BEST ITEM</h4>
                         <hr />
                         <div class="row">
-                            <div class="col-2 text-center" v-for="product in bestProducts">
-                                <span class="badge badge-pill badge-info">위</span>
-                                <div class="rounded-circle" style="overflow: hidden; border: 1px solid gray; height: 125px;" >
+                            <div class="col-2 text-center" 
+                            v-for="(product, index) in bestProducts">
+                                <span class="badge badge-pill badge-info">{{index + 1 }}위</span>
+                                <div class="rounded-circle best-hidden border border-light"
+                                v-bind:style="{ backgroundColor:activeColor }" 
+                                v-model="changeColor(index)">
                                 	<img class="ice-img-top"
                                 	:src="'/static/img/'+product.category+'/'+product.productImage.imagePath" />
-                                	<img class="ice-img-bottom"
+                                	<img class="ice-img-bottom-list"
 									src="/static/img/main/icecream-bottom.png" alt="" />
                                 </div>
-                                
+                                <p class="text-muted">{{product.name}}</p>
                             </div>
                         </div>
                     </div>

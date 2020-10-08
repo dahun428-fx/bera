@@ -9,7 +9,9 @@ var app = new Vue({
 	data:{
 		products:[],
 		productTags:[],
-		bestProducts:[]
+		bestProducts:[],
+		backgroundColors:['#FFB6C1','#FAC87D','#FF7F50','#369F36','#FAC87D','#FF7F50'],
+		activeColor:"#FFB6C1"
 	},
 	beforeCreate:function(){
 		let category = document.getElementById('uriType').value;
@@ -51,6 +53,9 @@ var app = new Vue({
 	methods:{
 		product:function(){
 			
+		},
+		changeColor:function(index){
+			app.activeColor = app.backgroundColors[index];
 		}
 	}
 	
