@@ -86,9 +86,11 @@ var app = new Vue({
 				app.pagination.pageNo = pagination.pageNo;
 			})
 		},
-		buyAction(e){
-			e.preventDefault()
-			alert('hi');
+		buyAction:function(no){
+			location.href = '/order/'+no;
+		},
+		detailAction:function(no){
+			location.href ='/menu/'+no;
 		}
 		
 		

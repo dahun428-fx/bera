@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body" id="productApp">
+		<div class="body">
+			<div class="container">
+				<div class="content-header text-center">
+					<h1 class="display-4">CREDIT</h1>
+					<p>
+						<strong>주문 결제 페이지 입니다.</strong>
+					</p>
+				</div>
+				<div class="custom-content-box">
+					<hr />
+					<div class="title text-center">
+						<h5>회원님의 소중한 결제 감사합니다.</h5>
+						<p>언제나 고객님을 위해 최선을 다하겠습니다.</p>
+					</div>
+					<form>
+						<input type="hidden" name="buyType" value="<%=request.getParameter("buyType") %>">
+						<div class="row orderlist">
+							<div class="col-12">
+								<!-- creidt form start -->
+								<table class="table table-bordered text-center">
+									<thead>
+										<tr>
+											<th scope="row"><input type="checkbox" name="checkall"/></th>
+											<th scope="row" colspan="2">상품</th>
+											<th scope="row" style="width: 100px;">수량</th>
+											<th scope="row">가격(원)</th>
+											<th scope="row">예상 적립포인트</th>
+
+										</tr>
+									</thead>
+									<!-- 서버에서 장바구니 구현하기 -->
+									<tbody>
+										<tr>
+											<td>
+												<!--
+												<input type="hidden" name="productNo" value="<%=productNoList[i] %>">
+												-->
+												<input type="hidden" id="product-one-price-<%=productNoList[i] %>" value="<%=product.getPrice() %>">
+												<input type="hidden" id="products-discountPrice-<%=productNoList[i] %>" value="<%=product.getDiscountPrice() %>">
+												<input type="hidden" id="product-one-point-<%=productNoList[i] %>" value="<%=product.getPoint() %>">
+												<input type="hidden" id="user-point" value="<%=user.getPoint() %>">
+												
+												
+												<input type="checkbox" id="product-checkbox-<%=productNoList[i] %>" name="productNo" value="<%=productNoList[i] %>" onchange="changeAllCheckbox()" checked/>
+											</td>
+											<td><img
+												src="../image/<%="ICECREAM".equals(product.getCategory()) ? "ICECREAM" : "CAKE"%>/<%=product.getImagePath()%>" />
+											</td>
+											<td>
+												<p><%=product.getName()%></p>
+											</td>
+											<td>
+												<p>
+													<input type="number" value="<%=productAmount %>"
+														class="form-control text-right" id="amount-input-<%=productNoList[i] %>" min="1" />
+												</p>
+											</td>
+											<td>
+												<p id="order-price-<%=productNoList[i] %>"><%=NumberUtil.numberWithComma(product.getPrice()*amountList[i])%></p>
+											</td>
+											<td>
+												<p><span id="product-point-<%=productNoList[i] %>"><%=NumberUtil.numberWithComma(product.getPoint()*amountList[i])%></span>p
+												</p>
+												<p id="add-hidden-td"></p>
+											</td>
+											
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-12">
+								<table class="table table-bordered">
+									<tbody>
+										<tr class="table-borderless">
+											<td colspan="3">총 상품금액</td>
+											<td colspan="1">
+												<!-- product price -->
+												<div class="text-right font-weight-bold">
+													<span id="price-span"><%=NumberUtil.numberWithComma(totalPrice) %></span> <span>원</span>
+												</div>
+											</td>
+										</tr>
+										<tr class="table-borderless">
+											<td colspan="3">할인금액</td>
+											<td colspan="1">
+												<!-- product price -->
+												<div class="text-right font-weight-bold text-danger" id="discount-price-div">
+													<span id="discount-price-span"><%=NumberUtil.numberWithComma(totalDiscountPrice) %></span> <span>원</span>
+												</div>
+											</td>
+										</tr>
+										<tr class="table-borderless">
+											<td colspan="3">현재보유포인트</td>
+											<td colspan="1"><div
+													class="text-right font-weight-bold text-primary">
+													<span id="user-point-span"><%=NumberUtil.numberWithComma(user.getPoint()) %></span> <span>point</span>
+												</div></td>
+										</tr>
+										<tr class="table-borderless">
+											<td colspan="1"><span>포인트사용</span></td>
+											<td colspan="3">
+												<!-- point --> <input class="form-control text-right" id="using-point-input" type="number" value="0" min="0" max="<%=userPoint %>"
+												style="margin: 0px;" name="using-point" onchange="refreshTotalOrderPrice()" onkeyup="refreshTotalOrderPrice(); this.value=this.value.replace(/[^0-9]/g,'');" />
+											</td>
+										</tr>
+										<tr class="table-borderless">
+											<td colspan="1"><span class="font-weight-bold">총결제금액</span></td>
+											<td colspan="3">
+												<div class="text-right font-weight-bold">
+
+													<span id="total-price-span"><%=NumberUtil.numberWithComma(totalPayPrice) %></span> <span>원</span>
+													<input type="hidden" id="total-price-hidden" value="<%=totalPayPrice %>">
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-12 text-center">
+							<hr />
+							<div class="title">
+								<h5>회원정보</h5>
+							</div>
+							<table class="table table-bordered">
+								<tbody>
+									<tr>
+										<td>이름</td>
+										<td>
+											<div class="form-group">
+												<input name="name" type="text" class="form-control" value="<%=user.getName() %>"
+													disabled="disabled" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>아이디</td>
+										<td>
+											<div class="form-group">
+												<input name="id" type="text" class="form-control" value="<%=user.getId() %>"
+													disabled="disabled" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>전화번호</td>
+										<td>
+											<div class="form-group" id="tel-input">
+												<input name="tel" type="text" class="form-control" id="phone-id" maxlength="13" value="<%=user.getPhone() %>"/>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>이메일</td>
+										<td>
+											<div class="form-group" id="email-input">
+												<input name="email" type="text" class="form-control" value="<%=user.getEmail() %>"/>
+											</div>
+											<p class="text-left" style="margin: 0; color: red; font-size: 13px;" id="email-error-text"></p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<hr />
+						</div>
+						<div class="text-center">
+							<button type="button" class="btn btn-secondary btn-lg" onclick="history.back();">돌아가기</button>
+							<button type="button" class="btn btn-primary btn-lg" onclick="formSubmit(event)">결제하기</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+<th:block layout:fragment="script">
+<script src="/static/js/user/list.js"></script>
+</th:block>
+</html>

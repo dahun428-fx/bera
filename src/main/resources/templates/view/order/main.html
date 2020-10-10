@@ -99,9 +99,8 @@
 										<div class="col-12 text-left">
 											<!-- submit -->
 											<button type="button" class="btn btn-primary btn-lg"
-												onclick="check('credit.jsp?type=one')">주문하기</button>
-											<button type="button" class="btn btn-secondary btn-lg"
-												onclick="cartCheck('../user/mycart.jsp')">장바구니</button>
+											@click.stop="orderAction(product.no)">주문하기</button>
+											<button type="button" class="btn btn-secondary btn-lg">장바구니</button>
 											<!-- submit -->
 										</div>
 									</form>

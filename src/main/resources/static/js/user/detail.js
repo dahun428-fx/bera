@@ -72,6 +72,9 @@ var app = new Vue({
 			if(count  > 1) count--;
 
 			this.order.count = count;			
+		},
+		orderAction:function(no){
+			location.href = '/credit'
 		}
 	}
 	
