@@ -37,9 +37,10 @@ public class PageController {
 		model.addAttribute("productNo", productNo);
 		return "view/product/detail";
 	}
-	@GetMapping("/order")
-	public String order() {
-		return "view/order/order";
+	@GetMapping("/order/{no}")
+	public String order(@PathVariable("no") int productNo, Model model) {
+		model.addAttribute("productNo", productNo);
+		return "view/order/main";
 	}
 	@GetMapping("/admin/addForm")
 	public String productAddForm() {

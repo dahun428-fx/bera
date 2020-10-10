@@ -8,6 +8,7 @@ var app = new Vue({
 	el:"#app",
 	data:{
 		product:{
+			no:"",
 			name:"",
 			category:"",
 			price:"",
@@ -18,7 +19,11 @@ var app = new Vue({
 			tagArray:[],
 			imagePath:""
 		},
-		icecreamImage:""
+		icecreamImage:"",
+		order:{
+			count:1,
+			totalPrice : 0
+		}
 	},
 	beforeCreate:function(){
 		let productNo = document.getElementById('productNo').value;
@@ -27,7 +32,9 @@ var app = new Vue({
 		})
 		.then(function(response){
 			const product = response.data;
+			app.product.no = product.no;
 			app.product.name = product.name;
+			app.product.price = product.price;
 			app.product.category = product.category;
 			app.product.discountPrice = product.discountPrice;
 			app.product.point = product.point;
@@ -38,8 +45,34 @@ var app = new Vue({
 			app.icecreamImage = '/static/img/'+app.product.category+'/'+app.product.imagePath;
 		})
 	},
+	filters:{
+		currency:function(price){
+			return price.toLocaleString();
+		}
+	},
+	computed:{
+		totalPrice:function(){
+			let total = this.product.price * this.order.count;
+			this.order.totalPrice = total;
+			return total;
+		}
+	},
 	methods:{
-		
+		countPlus:function(){
+			let count = this.order.count;
+			if(count < 100) {
+				count++;
+			} else {
+				count = 100;
+			}
+			this.order.count = count;
+		},
+		countMinus:function(){
+			let count = this.order.count;
+			if(count  > 1) count--;
+
+			this.order.count = count;			
+		}
 	}
 	
 	

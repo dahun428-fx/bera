@@ -29,9 +29,10 @@
 					</div>
 					<div class="col-12 text-center">
 						<div class="product-detail-btn" >
-							<a href="#"
-								type="button" class="btn btn-primary btn-lg" style="border-radius: 50px; background-color: #ff69b4; 
-																					border-color: #ff69b4; width: 200px;">구매하기</a>
+							<a :href="'/order/'+product.no"
+								type="button" class="btn btn-primary btn-lg" 
+								style="border-radius: 50px; background-color: #ff69b4; 
+									 border-color: #ff69b4; width: 200px;">구매하기</a>
 							<!-- 구매하기 버튼 get 방식으로 url 보내기 -->
 						</div>
 						<hr />

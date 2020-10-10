@@ -13,48 +13,43 @@
 					<div class="row">
 						<div class="col-6 thumbnail">
 							<!-- produt img -->
-							<div class="<%="ICECREAM".equals(product.getCategory()) ? "order-detail-img" : ""%>
-								"> <img src="../image/<%="ICECREAM".equals(product.getCategory()) ? "ICECREAM" : "CAKE"%>/<%=product.getImagePath()%>"
-								/>
-
-							</div>
-							<!-- product img -->
-							<% if("ICECREAM".equals(product.getCategory())){ %>
-							<div class="order-con-img">
-								<img src="../image/ICECREAM/icecream-bottom.png" alt=""
-									style="width: 140px; margin: 100px 15px 0 0;" />
-							</div>
-							<% } %>
+								<img
+							:src="icecreamImage" 
+							class="ice-img-top-detail"
+							/>
+						<div>
+							<img src="/static/img/main/icecream-bottom.png"
+								class="ice-img-bottom-detail"
+								v-if="product.category == 'icecream' "/>
+						</div>
 						</div>
 						<div class="col-6">
 							<div class="row">
 								<div class="col-12">
 									<!-- product title -->
-									<h3><%=product.getName()%></h3>
+									<h3>{{product.name}}</h3>
 									<!-- product title -->
 									<hr />
 								</div>
 								<div class="col-12">
-									<form action="../order/credit.jsp" method="post"
-										id="detail-form">
-										<input type="hidden" name="productNo" value="<%=productNo%>">
+									<form>
 										<table class="table table-bordered text-left">
 											<tbody>
 												<tr>
 													<th>구성</th>
 													<!-- product name -->
-													<td><%=product.getName()%></td>
+													<td>{{product.name}}</td>
 													<!-- product name -->
 												</tr>
 												<tr>
 													<th>판매가</th>
 													<td>
-														<!-- product price start --> <span id="product-price"><strong><%=product.getPrice()
-																- product.getDiscountPrice()%></strong></span> <!-- product price end -->
+														<!-- product price start --> 
+														<span id="product-price"><strong>{{product.discountPrice | currency}}</strong></span> <!-- product price end -->
 														<span>원</span> <span>( 정상가</span> <!-- product price start -->
-														<span><%=product.getPrice()%></span> <!-- product price end -->
+														<span>{{ product.price | currency }}</span> <!-- product price end -->
 														<span>원</span> <span>, </span> <!-- before discount price ( product price - discount price) start -->
-														<span class="text-danger"><%=product.getDiscountPrice()%></span>
+														<span class="text-danger">{{product.price - product.discountPrice}}</span>
 														<!-- before discount price end --> <span
 														class="text-danger">원</span> <span><i
 															class="fas fa-arrow-down text-danger"></i> )</span>
@@ -63,7 +58,7 @@
 												<tr>
 													<th>적립포인트</th>
 													<!-- point start -->
-													<td><strong><%=product.getPoint()%>p</strong></td>
+													<td><strong>{{product.point | currency}} p</strong></td>
 													<!-- point end -->
 												</tr>
 												<tr>
@@ -73,16 +68,21 @@
 															<div class="col-4">
 																<!-- product count -->
 																<input type="number" value="1" name="amount"
-																	class="form-control" id="count" readonly="readonly" />
+																	class="form-control" id="count" 
+																	min="1"
+																	max="100"
+																	v-model="order.count"/>
 																<!-- product count -->
 															</div>
 															<div class="col-8 offeset-4">
 																<button type="button"
-																	class="btn btn-outline-primary btn-sm" id="count-plus">
+																	class="btn btn-outline-primary btn-sm" id="count-plus"
+																	@click="countPlus">
 																	<i class="fas fa-plus"></i>
 																</button>
 																<button type="button"
-																	class="btn btn-outline-primary btn-sm" id="count-minus">
+																	class="btn btn-outline-primary btn-sm" id="count-minus"
+																	@click="countMinus">
 																	<i class="fas fa-minus"></i>
 																</button>
 															</div>
@@ -91,8 +91,7 @@
 												</tr>
 												<tr>
 													<th>총상품금액</th>
-													<td><span id="product-total-price"><%=product.getPrice()
-															- product.getDiscountPrice()%></span> <span>원</span></td>
+													<td><span id="product-total-price">{{totalPrice | currency}}</span> <span>원</span></td>
 												</tr>
 											</tbody>
 										</table>
@@ -118,12 +117,12 @@
 								<div class="text-center">
 									<strong>[제품명]</strong>
 								</div>
-								<h5 class="card-title text-center"><%=product.getName()%></h5>
+								<h5 class="card-title text-center">{{product.name}}</h5>
 								<div class="text-center">
 									<strong>[제품 특징]</strong>
 								</div>
 								<p class="card-text">
-									<span style="color: #E56D29;"><%=product.getExplain()%></span>
+									<span style="color: #E56D29;">{{product.explain}}</span>
 								</p>
 								<div style="margin-top: 20px;">
 									<a href="#" class="btn btn-primary" onclick="history.go(-1);">이전페이지로</a>
@@ -133,6 +132,7 @@
 					</div>
 				</div>
 			</div>
+			<input type="hidden" th:value="${productNo}" id="productNo" />
 		</div>
 <th:block layout:fragment="script">
 	<script src="/static/js/user/detail.js"></script>
