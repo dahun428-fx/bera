@@ -22,7 +22,8 @@ var app = new Vue({
 		icecreamImage:"",
 		order:{
 			count:1,
-			totalPrice : 0
+			totalPrice : 0,
+			type:"noBasket"
 		}
 	},
 	beforeCreate:function(){
@@ -73,8 +74,44 @@ var app = new Vue({
 
 			this.order.count = count;			
 		},
-		orderAction:function(no){
-			location.href = '/credit'
+		orderAction:function(){
+		
+			var order = {
+				"productNo":app.product.no,
+				"productPrice":app.product.price,
+				"orderProductAmount":app.order.count
+			}
+//			var product = {
+//				"no":app.product.no, 
+//				"amount":app.product.amount,
+//				"name":app.product.name,
+//				"price":app.product.price,
+//				"point":app.product.point,
+//				"discountPrice":app.product.discountPrice,
+//				"category":app.product.category,
+//				"regDate":"",
+//				"reviews":0,
+//				"explain":"",
+//				"isAvailable":""};
+//			var products = new Array();
+//			products.push(product);
+
+			var orders = new Array();
+			orders.push(order);
+			
+			var orderForm = new Object();
+			orderForm.orders = orders;
+			orderForm.orderType = app.order.type;
+			
+			axios.post('/order/buy', orderForm, {
+				headers:{'X-CSRF-TOKEN':metaToken}
+			})
+			.then(function(response){
+				const isSuccess = response.data.isSuccess
+				if(isSuccess == 'success'){
+					location.href = '/order/credit';
+				}
+			})
 		}
 	}
 	

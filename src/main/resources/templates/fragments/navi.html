@@ -8,10 +8,10 @@
 				<div class="col-3" sec:authorize="isAnonymous()">
 					<div class="row">
 						<div class="col-6">
-							<a href="/login" class="nav-link">LOGIN</a>
+							<a href="/user/login" class="nav-link">LOGIN</a>
 						</div>
 						<div class="col-6">
-							<a href="/join" class="nav-link">JOIN</a>
+							<a href="/user/join" class="nav-link">JOIN</a>
 						</div>
 					</div>
 				</div>
@@ -38,11 +38,11 @@
 							</div>
 							</transition></li>
 						<li class="nav-item" style="width: 250px;"><a
-							class="nav-link" href="/main">MENU</a> <transition name="slide">
+							class="nav-link" href="/product/main">MENU</a> <transition name="slide">
 							<div class="nav-sub" v-if="showNavi">
 								<ul class="nav-sub-menu list-unstyled">
-									<li class="m-3"><a href="/icecream">아이스크림</a></li>
-									<li class="m-3"><a href="/cake">아이스크림 케이크</a></li>
+									<li class="m-3"><a href="/product/icecream">아이스크림</a></li>
+									<li class="m-3"><a href="/product/cake">아이스크림 케이크</a></li>
 								</ul>
 							</div>
 							</transition></li>

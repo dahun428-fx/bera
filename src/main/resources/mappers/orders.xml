@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.OrderDao">
+	<insert id="insertOrderMain" parameterType="com.example.demo.vo.OrderDetail">
+		INSERT INTO br_order_main
+		(user_id, order_using_point, order_payment)
+		VALUES
+		(#{userId}, #{orderUsingPoint}, #{orderPayment})
+		<selectKey resultType="int" order="AFTER" keyProperty="no">
+			SELECT LAST_INSERT_ID() as no
+		</selectKey>
+	</insert>
+	<insert id="insertOrderSub" parameterMap="com.example.demo.vo.Order">
+		INSERT INTO br_order_sub
+		(order_no, product_no, product_price, order_product_amount)
+		VALUES
+		(#{no}, #{productNo}, #{productPrice}, #{orderProductAmount})
+	</insert>
+</mapper>

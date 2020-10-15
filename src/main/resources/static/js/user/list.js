@@ -87,10 +87,10 @@ var app = new Vue({
 			})
 		},
 		buyAction:function(no){
-			location.href = '/order/'+no;
+			location.href = '/order/buy/'+no;
 		},
 		detailAction:function(no){
-			location.href ='/menu/'+no;
+			location.href ='/product/menu/'+no;
 		}
 		
 		

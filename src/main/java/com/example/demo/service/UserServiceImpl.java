@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,22 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+	/**
+	 * Spring Security Authentication 객체에서 로그인된 유저 객체를
+	 * 비밀번호를 제외하여 반환한다.
+	 * 
+	 */
+	public User getLoginedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User savedUser = (User) authentication.getPrincipal();
+		User newUser = new User();
+		newUser.setName(savedUser.getName());
+		newUser.setId(savedUser.getId());
+		newUser.setPhone(savedUser.getPhone());
+		newUser.setEmail(savedUser.getEmail());
+		
+		return newUser;
+	}
 	/**
 	 * 지정된 사용자 아이디에 해당하는 사용자 정보를 반환한다.
 	 * 

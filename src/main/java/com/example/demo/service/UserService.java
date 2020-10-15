@@ -9,4 +9,5 @@ import com.example.demo.vo.User;
 public interface UserService extends UserDetailsService {
 
 	Map<String, Object> join(User user);
+	User getLoginedUser();
 }

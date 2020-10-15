@@ -25,7 +25,7 @@
 			<!-- login form start -->
 			<div class="custom-box-wrap">
 				<div class="custom-box">
-					<form id="loginForm" method="post" action="/login" @submit.prevent="loginAction(user)">
+					<form id="loginForm" method="post" action="/user/login" @submit.prevent="loginAction(user)">
 						 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 						<div class="row">
 							<div class="col-8">

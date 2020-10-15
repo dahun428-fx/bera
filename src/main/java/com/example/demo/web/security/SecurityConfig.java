@@ -76,11 +76,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				//접근 권한 제어 구성
 				.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/credit/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+				.antMatchers("/order/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 				.antMatchers("/", "/**").access("permitAll")
 			.and()
 				.formLogin()
-				.loginPage("/login")
+				.loginPage("/user/login")
 				.defaultSuccessUrl("/")
 			.and()
 				.logout()
