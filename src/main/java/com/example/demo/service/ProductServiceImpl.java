@@ -68,9 +68,7 @@ public class ProductServiceImpl implements ProductService{
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		if("getProductImages".equals(map.get("query"))) {
-			System.out.println(map.get("query"));
 			List<ProductImage> list = productDao.getProductImages();
-			System.out.println(list);
 			resultMap.put("imageList", list);
 			return resultMap;
 		};
@@ -83,9 +81,6 @@ public class ProductServiceImpl implements ProductService{
 			param.put("formType", searchForm.getFormType());
 			param.put("listType", searchForm.getListType());
 		}
-		System.out.println("searchType : " + searchForm.getSearchType());
-		System.out.println("formType : " + searchForm.getFormType());
-		System.out.println("listType : " + searchForm.getListType());
 		int totalRows = this.totalListCount(param);
 		int rowsPerPage = (searchForm.getRowsPerPage() != 0) ? searchForm.getRowsPerPage() : 5;
 		int pagesPerBlock = (searchForm.getPagesPerBlock() != 0) ? searchForm.getPagesPerBlock(): 5;
@@ -94,7 +89,6 @@ public class ProductServiceImpl implements ProductService{
 		Pagination pagination = new Pagination(rowsPerPage, pagesPerBlock, pageNo, totalRows);
 		int endIndex = (searchForm.getEndIndex() != 0) ? searchForm.getEndIndex() : 5;
 		pagination.setEndIndex(endIndex);
-		System.out.println("endIndex : " + endIndex);
 		param.put("pagination", pagination);
 		List<ProductDTO> list = productDao.getAllProducts(param);
 		

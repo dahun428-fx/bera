@@ -61,6 +61,18 @@
 		(#{userId}, #{roleName})
 	
 	</insert>
+	<update id="updateUser" parameterType="com.example.demo.vo.User">
+		UPDATE
+			br_users
+		SET
+			user_password = #{password},
+			user_point = #{point},
+			deleted = #{deleted},
+			user_phone = #{phone},
+			user_email = #{email}
+		WHERE
+			user_id = #{id}		
+	</update>
 	
 	
 	

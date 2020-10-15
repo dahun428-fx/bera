@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body" id="app">
+	<div class="container">
+		<div class="custom-content-box">
+			<hr />
+			<div class="title text-center">
+				<h5>회원님의 소중한 결제 감사합니다.</h5>
+				<p>언제나 고객님을 위해 최선을 다하겠습니다.</p>
+			</div>
+			<div class="custom-box-wrap">
+				<div class="custom-box text-center">
+					<h4>상품주문이 완료되었습니다.</h4>
+					<p>주문하신 상품내역은</p>
+					<p style="color: blue">MYPAGE</p>
+					<p>에서 확인하실 수 있습니다.</p>
+				</div>
+			</div>
+			<div class="col-12 text-center">
+				<hr />
+				<a href="#"
+					class="btn btn-outline-primary btn-lg">Mypage</a>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script src="/static/js/user/detail.js"></script>
+</th:block>
+</html>

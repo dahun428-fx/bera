@@ -11,6 +11,7 @@ var app = new Vue({
 		totalPrice:0,
 		totalDiscountPrice:0,
 		usePoint:0,
+		savePoint:0,
 		totalPay:0,
 		allCheckbox:true,
 		checkboxList:[],
@@ -43,6 +44,9 @@ var app = new Vue({
 			let totalPay = app.totalPrice - app.totalDiscountPrice - app.usePoint;
 			app.totalPay = totalPay;
 			return totalPay;
+		},
+		savePointCompute:function(){
+		
 		}
 	},
 	methods:{
@@ -132,7 +136,12 @@ var app = new Vue({
 				headers:{'X-CSRF-TOKEN':metaToken}
 			})
 			.then(function(response){
-			
+				console.log(response.data)
+				if(response.data.isSuccess == "success"){
+					location.href = '/order/complete';
+				} else {
+					alert(response.data.msg);
+				}
 			})
 		}
 		
