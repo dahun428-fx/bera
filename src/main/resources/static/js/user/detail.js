@@ -112,6 +112,19 @@ var app = new Vue({
 					location.href = '/order/credit';
 				}
 			})
+		},
+		cartAction:function(){
+			var order = {
+				"productNo":app.product.no,
+				"productPrice":app.product.price,
+				"orderProductAmount":app.order.count
+			}
+			axios.post("/order/cart", order, {
+				headers:{'X-CSRF-TOKEN':metaToken}
+			}).then(function(response){
+				console.log(response.data);
+			})
+			
 		}
 	}
 	

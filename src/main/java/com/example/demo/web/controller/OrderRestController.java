@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.dto.OrderDTO;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.form.OrderForm;
+import com.example.demo.service.CartService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
@@ -45,6 +46,9 @@ public class OrderRestController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private CartService cartService;
 	
 	@GetMapping("/buy/{no}")
 	public ModelAndView buyView(Model model, @PathVariable("no") int productNo) {
@@ -68,6 +72,18 @@ public class OrderRestController {
 		
 		return resultMap;
 	}
+	@PostMapping("/cart")
+	public Map<String, Object> cart(@RequestBody Order order){
+		Map<String, Object> resultMap = new HashMap<>();
+		User user = userService.getLoginedUser();
+		Map<String, Object> param = new HashMap<>();
+		param.put("order", order);
+		param.put("user", user);
+		cartService.add(param);
+		
+		return resultMap;
+	}
+			
 	@GetMapping("/credit")
 	public ModelAndView creditView() {
 		ModelAndView mav = new ModelAndView();
@@ -103,9 +119,6 @@ public class OrderRestController {
 	@PostMapping("/addOrder")
 	@ResponseBody
 	public Map<String, Object> addOrder(@RequestBody OrderForm orderForm){
-		Map<String, Object> resultMap = new HashMap<>();
-		System.out.println(orderForm);
-		
 		return orderService.add(orderForm);
 	}
 	@GetMapping("/complete")

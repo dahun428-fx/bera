@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body" id="app">
+			<div class="container mt-5">
+				<div class="content-header text-center">
+					<h1 class="display-4">MY PAGE</h1>
+					<p>
+						<strong>회원님을 위한 베스킨라빈스의 다양한 정보</strong>
+					</p>
+				</div>
+				<div class="custom-content-box">
+					<hr />
+					<div class="mypage-nav">
+						<div class="col-12">
+							<div th:replace="fragments/mypagenavi :: mypagenaviFragment"></div>
+						</div>
+					</div>
+					<div class="row content-header text-center">
+						<!-- mypoint content start -->
+						<div class="col-9 custom-border-right">
+							<h2 class="text-info">안녕하세요 {{user.name}}님</h2>
+						</div>
+						<div class="col-3">
+							<h5>사용가능 총 포인트</h5>
+							<span class="text-primary">{{user.point }}p</span>
+						</div>
+						<!-- mypoint coatent end -->
+					</div>
+					<form>
+						<div class="row content-header">
+							<!-- mypage-cart content start -->
+							<div class="col-12">
+								<h4>나의 장바구니 <span class="badge badge-pill badge-dark"><%=basketDtos.size() %></span></h4>
+								<hr />
+								<div class="row orderlist">
+									<table class="table table-bordered text-center">
+										<thead>
+											<tr>
+												<th scope="row">
+													<input type="checkbox" name="checkall" onchange="toggleChecked()"/>
+												</th>
+												<th scope="row" colspan="2">상품</th>
+												<th scope="row">수량</th>
+												<th scope="row">가격(원)</th>
+												<th scope="row">예상 적립포인트</th>
+												<th scope="row">구매하기</th>
+											</tr>
+										</thead>
+										<!-- 서버에서 장바구니 구현하기 -->
+										<tbody>
+											<tr>
+												<td colspan="7" class="text-center">장바구니에 상품이 없습니다.</td>
+											</tr>
+											<tr>
+												<td>
+													<input type="hidden" name="amount" value="<%=basketDto.getAmount() %>"/>
+													<input type="checkbox" name="productNo" value="<%=basketDto.getNo() %>" onchange="changeAllCheckbox()"/>
+												</td>
+												<td>
+													<img src="../image/<%="ICECREAM".equals(basketDto.getCategory()) ? "ICECREAM":"CAKE" %>/<%=basketDto.getImagePath() %>"/>
+												</td>
+												<td>
+													<p><%=basketDto.getName() %></p>
+												</td>
+												<td>
+													<p><%=basketDto.getAmount() %></p>
+												</td>
+												<td>
+													<p><%=NumberUtil.numberWithComma((basketDto.getPrice()-basketDto.getDiscountPrice())*basketDto.getAmount()) %></p>
+												</td>
+												<td>
+													<p><%=NumberUtil.numberWithComma(basketDto.getPoint()*basketDto.getAmount()) %>p</p>
+												</td>
+												<td>
+													<button type="button" class="btn btn-primary" onclick="AllCheckDelete(); check('../order/credit.jsp?productNo=<%=basketDto.getNo() %>&amount=<%=basketDto.getAmount() %>&buyType=cart&type=one', 'one')">구매하기</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="col-12">
+								<div class="form-btn text-center">
+									<button class="btn btn-danger" type="button" onclick="check('../order/basketdelete.jsp')">선택상품삭제</button>
+									<button class="btn btn-primary" type="button" onclick="check('../order/credit.jsp')">선택상품구매</button>
+								</div>
+							</div>
+							<!-- mypage-cart content end -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+<th:block layout:fragment="script">
+	<script src="/static/js/user/mypage.js"></script>
+</th:block>
+</html>

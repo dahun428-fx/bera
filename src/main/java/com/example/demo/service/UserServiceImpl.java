@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 		newUser.setId(savedUser.getId());
 		newUser.setPhone(savedUser.getPhone());
 		newUser.setEmail(savedUser.getEmail());
-		
+		newUser.setPoint(savedUser.getPoint());
 		return newUser;
 	}
 	/**
