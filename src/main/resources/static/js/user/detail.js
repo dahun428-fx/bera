@@ -114,7 +114,8 @@ var app = new Vue({
 			})
 		},
 		cartAction:function(){
-			var order = {
+			console.log('action');
+			var order = {	
 				"productNo":app.product.no,
 				"productPrice":app.product.price,
 				"orderProductAmount":app.order.count
@@ -123,6 +124,14 @@ var app = new Vue({
 				headers:{'X-CSRF-TOKEN':metaToken}
 			}).then(function(response){
 				console.log(response.data);
+				if(response.data.isSuccess == "success"){
+					var con = confirm('장바구니에 등록되었습니다. 장바구니로 이동하시겠습니까?');
+					if(con){
+						location.href = '/mypage/cart';
+					}
+				} else {
+					alert('오류입니다. 다시 시도해주세요');
+				}
 			})
 			
 		}

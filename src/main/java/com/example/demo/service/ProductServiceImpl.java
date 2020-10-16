@@ -30,8 +30,6 @@ public class ProductServiceImpl implements ProductService{
 
 	
 	public ProductDTO get(int productNo) {
-		System.out.println(productDao.getProductImageByNo(productNo));
-		System.out.println(productDao.getProductTagsByNo(productNo));
 		return productDao.getProductByNo(productNo);
 	}
 	public int totalListCount(Map<String, Object> param) {

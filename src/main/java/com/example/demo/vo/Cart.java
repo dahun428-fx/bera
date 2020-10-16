@@ -1,11 +1,14 @@
 package com.example.demo.vo;
 
+import java.util.Date;
+
 public class Cart {
 
 	private int no;
 	private String userId;
 	private int productNo;
 	private int amount;
+	private Date regDate;
 	
 	public Cart() {
 	}
@@ -40,6 +43,14 @@ public class Cart {
 
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
 	}
 
 	@Override

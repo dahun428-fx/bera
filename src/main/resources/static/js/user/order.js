@@ -46,7 +46,8 @@ var app = new Vue({
 			return totalPay;
 		},
 		savePointCompute:function(){
-		
+			let savePoint = 0;
+			
 		}
 	},
 	methods:{
@@ -110,7 +111,6 @@ var app = new Vue({
 			var list = app.checkboxList;
 			var orderList = app.orders;
 			var orders = new Array();
-			console.log(list);
 			for(var i = 0; i < list.length; i++){
 				if(list[i].isChecked){
 				

@@ -8,4 +8,5 @@ import com.example.demo.vo.Order;
 public interface CartService {
 
 	Map<String, Object> add(Map<String, Object> param);
+	Map<String, Object> list(Map<String, Object> param);
 }

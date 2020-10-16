@@ -74,14 +74,12 @@ public class OrderRestController {
 	}
 	@PostMapping("/cart")
 	public Map<String, Object> cart(@RequestBody Order order){
-		Map<String, Object> resultMap = new HashMap<>();
 		User user = userService.getLoginedUser();
 		Map<String, Object> param = new HashMap<>();
 		param.put("order", order);
 		param.put("user", user);
-		cartService.add(param);
 		
-		return resultMap;
+		return cartService.add(param);
 	}
 			
 	@GetMapping("/credit")

@@ -50,33 +50,34 @@
 										</thead>
 										<!-- 서버에서 장바구니 구현하기 -->
 										<tbody>
+											<template v-for="cart in list">
 											<tr>
-												<td colspan="7" class="text-center">장바구니에 상품이 없습니다.</td>
+												<td class="align-middle">
+													<input type="checkbox" name="productNo" :value="cart.no" />
+												</td>
+												<td class="align-middle">
+													<img 
+													style="width: 125px;"
+													:src="'/static/img/'+cart.category+'/'+cart.imagePath"/>
+												</td>
+												<td class="align-middle">
+													<p>{{cart.name}}</p>
+												</td>
+												<td class="align-middle">
+													<p>{{cart.amount}}</p>
+												</td>
+												<td class="align-middle">
+													<p>{{cart.price * cart.amount}}</p>
+												</td>
+												<td class="align-middle">
+													<p>{{cart.point * cart.amount}}p</p>
+												</td>
+												<td class="align-middle">
+													<button type="button" class="btn btn-primary"
+													>구매하기</button>
+												</td>
 											</tr>
-											<tr>
-												<td>
-													<input type="hidden" name="amount" value="<%=basketDto.getAmount() %>"/>
-													<input type="checkbox" name="productNo" value="<%=basketDto.getNo() %>" onchange="changeAllCheckbox()"/>
-												</td>
-												<td>
-													<img src="../image/<%="ICECREAM".equals(basketDto.getCategory()) ? "ICECREAM":"CAKE" %>/<%=basketDto.getImagePath() %>"/>
-												</td>
-												<td>
-													<p><%=basketDto.getName() %></p>
-												</td>
-												<td>
-													<p><%=basketDto.getAmount() %></p>
-												</td>
-												<td>
-													<p><%=NumberUtil.numberWithComma((basketDto.getPrice()-basketDto.getDiscountPrice())*basketDto.getAmount()) %></p>
-												</td>
-												<td>
-													<p><%=NumberUtil.numberWithComma(basketDto.getPoint()*basketDto.getAmount()) %>p</p>
-												</td>
-												<td>
-													<button type="button" class="btn btn-primary" onclick="AllCheckDelete(); check('../order/credit.jsp?productNo=<%=basketDto.getNo() %>&amount=<%=basketDto.getAmount() %>&buyType=cart&type=one', 'one')">구매하기</button>
-												</td>
-											</tr>
+											</template>
 										</tbody>
 									</table>
 								</div>

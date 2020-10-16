@@ -8,5 +8,24 @@
 		VALUES
 		(#{userId}, #{productNo}, #{amount})
 	</insert>
+	<select id="getAllCarts" parameterType="map" resultType="com.example.demo.vo.Cart">
+		SELECT 
+			A.no,
+			A.user_id 		as "userId",
+			A.product_no 	as "productNo",
+			A.amount,
+			A.reg_date 		as "regDate" 
+		FROM br_shopping_basket A
+		<if test="query != null">
+			<choose>
+				<when test="query == 'getCartByUserId'">
+					<where>
+						user_id = #{userId}
+					</where>
+						ORDER BY A.reg_date DESC
+				</when>
+			</choose>
+		</if>
+	</select>
 
 </mapper>
