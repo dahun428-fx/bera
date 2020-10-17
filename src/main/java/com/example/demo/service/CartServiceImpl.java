@@ -31,6 +31,14 @@ public class CartServiceImpl implements CartService {
 			return resultMap;
 		}
 		
+		Cart savedCart = cartDao.getCart(order.getProductNo(), user.getId());
+		if(savedCart != null) {
+			savedCart.setAmount(savedCart.getAmount() + order.getOrderProductAmount());
+			cartDao.updateAmount(savedCart);
+			resultMap.put("isSuccess", "success");
+			resultMap.put("msg", "수량이 추가되었습니다.");
+			return resultMap;
+		}
 		Cart cart = new Cart();
 		cart.setAmount(order.getOrderProductAmount());
 		cart.setProductNo(order.getProductNo());

@@ -27,5 +27,28 @@
 			</choose>
 		</if>
 	</select>
-
+	<select id="getCart" resultType="com.example.demo.vo.Cart">
+		SELECT 
+			A.no,
+			A.user_id 		as "userId",
+			A.product_no 	as "productNo",
+			A.amount,
+			A.reg_date 		as "regDate" 
+		FROM br_shopping_basket A
+		WHERE
+			user_id = #{userId}
+		AND 
+			product_no IN (#{productNo})
+		
+	</select>
+	<update id="updateAmount" parameterType="com.example.demo.vo.Cart">
+		UPDATE
+			br_shopping_basket
+		SET
+			amount = #{amount}
+		WHERE
+			product_no = #{productNo}
+		AND 
+			user_id = #{userId}	
+	</update>
 </mapper>

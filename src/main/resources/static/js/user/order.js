@@ -83,16 +83,19 @@ var app = new Vue({
 			}
 			app.getTotalPrice();
 		},
-		changeCheckbox:function(){
+		changeCheckbox:function(index){
 			let list = app.checkboxList
 			for(var i in list){
 				if(!list[i].isChecked){
 					app.allCheckbox = false;
-				} else {
+					return;
+				} 
+				if(list[i].isChecked){
 					app.allCheckbox = true;
 				}
 			}
 			app.getTotalPrice();
+			app.addList(index);
 		},
 		changeAllCheckToggle:function(){
 			let list = app.checkboxList
@@ -106,6 +109,11 @@ var app = new Vue({
 				}
 			}
 			app.getTotalPrice();
+		},
+		addList:function(index){
+			let list = app.checkboxList;
+			console.log(index);
+			console.log(list[index]);
 		},
 		submitOrder:function(){
 			var list = app.checkboxList;

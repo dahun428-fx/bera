@@ -24,7 +24,7 @@
 						</div>
 						<div class="col-3">
 							<h5>사용가능 총 포인트</h5>
-							<span class="text-primary">{{user.point }}p</span>
+							<span class="text-primary">{{user.point | currency}}p</span>
 						</div>
 						<!-- mypoint coatent end -->
 					</div>
@@ -32,14 +32,16 @@
 						<div class="row content-header">
 							<!-- mypage-cart content start -->
 							<div class="col-12">
-								<h4>나의 장바구니 <span class="badge badge-pill badge-dark"><%=basketDtos.size() %></span></h4>
+								<h4>나의 장바구니 <span class="badge badge-pill badge-dark">{{totalSize}}건</span></h4>
 								<hr />
 								<div class="row orderlist">
 									<table class="table table-bordered text-center">
 										<thead>
 											<tr>
 												<th scope="row">
-													<input type="checkbox" name="checkall" onchange="toggleChecked()"/>
+													<input type="checkbox" name="checkall"
+													v-model="allCheckbox" 
+													@change="changeAllCheckToggle"/>
 												</th>
 												<th scope="row" colspan="2">상품</th>
 												<th scope="row">수량</th>
@@ -50,10 +52,14 @@
 										</thead>
 										<!-- 서버에서 장바구니 구현하기 -->
 										<tbody>
-											<template v-for="cart in list">
+											<template v-for="(cart, index) in list">
 											<tr>
 												<td class="align-middle">
-													<input type="checkbox" name="productNo" :value="cart.no" />
+													<input type="checkbox" name="productNo"
+													 :value="cart.no" 
+													 v-model="checkboxList[index].isChecked"
+													 @change="changeCheckbox"
+													 />
 												</td>
 												<td class="align-middle">
 													<img 
@@ -64,13 +70,20 @@
 													<p>{{cart.name}}</p>
 												</td>
 												<td class="align-middle">
-													<p>{{cart.amount}}</p>
+													<p>
+														<input type="number" 
+														class="form-control"
+														min="0"
+														max="100"
+														v-model="cart.amount" 
+														/>
+													</p>
 												</td>
 												<td class="align-middle">
-													<p>{{cart.price * cart.amount}}</p>
+													<p>{{cart.price * cart.amount | currency}}</p>
 												</td>
 												<td class="align-middle">
-													<p>{{cart.point * cart.amount}}p</p>
+													<p>{{cart.point * cart.amount | currency}}p</p>
 												</td>
 												<td class="align-middle">
 													<button type="button" class="btn btn-primary"
@@ -84,8 +97,9 @@
 							</div>
 							<div class="col-12">
 								<div class="form-btn text-center">
-									<button class="btn btn-danger" type="button" onclick="check('../order/basketdelete.jsp')">선택상품삭제</button>
-									<button class="btn btn-primary" type="button" onclick="check('../order/credit.jsp')">선택상품구매</button>
+									<button class="btn btn-danger" type="button" 
+									@click.stop="selectedDelect">선택상품삭제</button>
+									<button class="btn btn-primary" type="button" >전체상품구매</button>
 								</div>
 							</div>
 							<!-- mypage-cart content end -->

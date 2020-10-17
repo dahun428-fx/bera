@@ -45,7 +45,7 @@
 											<td class="align-middle">
 												<input type="checkbox" name="order"
 												v-model="checkboxList[index].isChecked"
-												@change="changeCheckbox"
+												@change="changeCheckbox(index)"
 												/>
 											</td>
 											<td class="align-middle"><img style="width: 125px;"
@@ -67,7 +67,7 @@
 												<p>{{order.productPrice * order.orderAmount | currency}}</p>
 											</td>
 											<td class="align-middle">
-												<p>{{order.productPrice - order.productDiscountPrice}}</p>
+												<p>{{order.productDiscountPrice}}</p>
 											</td>
 											<td class="align-middle">
 												<p><span>{{order.productPoint * order.orderAmount | currency}}</span>

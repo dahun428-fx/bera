@@ -11,7 +11,10 @@ var app = new Vue({
 		carts:[],
 		products:[],
 		images:[],
-		list:[]
+		list:[],
+		totalSize:0,
+		allCheckbox:true,
+		checkboxList:[]
 	},
 	beforeCreate:function(){
 		axios.get("/mypage/info",{
@@ -26,12 +29,16 @@ var app = new Vue({
 			app.carts = cartList;
 			app.products = productList;
 			app.images = imageList;
-			console.log(app.carts);
-			console.log(app.products);
-			console.log(imageList);
 			app.createCartList();
-			
+			app.totalSizeSet(app.list);
+			app.addCheckboxList(app.list);
 		});
+	},
+	filters:{
+		currency:function(value){
+			value = new Number(value);
+			return value.toLocaleString();
+		}
 	},
 	computed:{
 		
@@ -55,8 +62,47 @@ var app = new Vue({
 				list.push(obj);
 			}
 			app.list = list;
-			console.log(app.list);
 		
+		},
+		totalSizeSet:function(list){
+			app.totalSize = list.length;
+		},
+		addCheckboxList:function(list){
+			for(var i in list){
+				obj = new Object();
+				obj.order = list[i];
+				obj.productNo = list[i].productNo;
+				obj.isChecked = true;
+				app.checkboxList.push(obj);				
+			}
+		},
+		changeAllCheckToggle:function(){
+			let list = app.checkboxList
+			if(app.allCheckbox){
+				for(var i in list){
+					list[i].isChecked = true;
+				}
+			} else {
+				for(var i in list){
+					list[i].isChecked = false;
+				}
+			}
+		},
+		changeCheckbox:function(){
+			let list = app.checkboxList
+			for(var i in list){
+				if(!list[i].isChecked){
+					app.allCheckbox = false;
+					return;
+				} 
+				if(list[i].isChecked){
+					app.allCheckbox = true;
+				}
+				
+			}
+		},
+		selectedDelect:function(){
+			console.log(app.checkboxList);
 		}
 	}
 	
