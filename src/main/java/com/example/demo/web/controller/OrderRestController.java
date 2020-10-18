@@ -92,7 +92,7 @@ public class OrderRestController {
 	public Map<String, Object> credit(HttpSession session){
 		Map<String, Object> resultMap = new HashMap<>();
 		List<Order> orders = (List<Order>) session.getAttribute("ORDER_LIST");
-		
+		System.out.println("orderlist : "+orders);
 		List<OrderDTO> orderList = new ArrayList<>();
 		
 		for(Order order : orders) {

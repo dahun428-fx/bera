@@ -17,7 +17,7 @@
 							<div th:replace="fragments/mypagenavi :: mypagenaviFragment"></div>
 						</div>
 					</div>
-					<div class="row content-header text-center">
+					<div class="row content-header text-center mt-5 mb-5">
 						<!-- mypoint content start -->
 						<div class="col-9 custom-border-right">
 							<h2 class="text-info">안녕하세요 {{user.name}}님</h2>
@@ -75,15 +75,15 @@
 														class="form-control"
 														min="0"
 														max="100"
-														v-model="cart.amount" 
+														v-model="cart.orderProductAmount" 
 														/>
 													</p>
 												</td>
 												<td class="align-middle">
-													<p>{{cart.price * cart.amount | currency}}</p>
+													<p>{{cart.productPrice * cart.orderProductAmount | currency}}</p>
 												</td>
 												<td class="align-middle">
-													<p>{{cart.point * cart.amount | currency}}p</p>
+													<p>{{cart.point * cart.orderProductAmount | currency}}p</p>
 												</td>
 												<td class="align-middle">
 													<button type="button" class="btn btn-primary"
@@ -99,7 +99,8 @@
 								<div class="form-btn text-center">
 									<button class="btn btn-danger" type="button" 
 									@click.stop="selectedDelect">선택상품삭제</button>
-									<button class="btn btn-primary" type="button" >전체상품구매</button>
+									<button class="btn btn-primary" type="button" 
+									@click.stop="selectedOrder">선택상품구매</button>
 								</div>
 							</div>
 							<!-- mypage-cart content end -->

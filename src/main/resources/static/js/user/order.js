@@ -11,7 +11,6 @@ var app = new Vue({
 		totalPrice:0,
 		totalDiscountPrice:0,
 		usePoint:0,
-		savePoint:0,
 		totalPay:0,
 		allCheckbox:true,
 		checkboxList:[],
@@ -31,23 +30,19 @@ var app = new Vue({
 			app.userInfo = userInfo;
 			app.orders = orderList;
 			app.addCheckboxList(app.orders);
-			console.log(app.orders);
 		})
 	},
 	filters:{
 		currency:function(value){
+			value = new Number(value);
 			return value.toLocaleString();
 		}
 	},
 	computed:{
 		totalPayCompute:function(){
-			let totalPay = app.totalPrice - app.totalDiscountPrice - app.usePoint;
-			app.totalPay = totalPay;
+			let totalPay = this.totalPrice - this.totalDiscountPrice - this.usePoint;
+			this.totalPay = totalPay;
 			return totalPay;
-		},
-		savePointCompute:function(){
-			let savePoint = 0;
-			
 		}
 	},
 	methods:{
@@ -83,37 +78,21 @@ var app = new Vue({
 			}
 			app.getTotalPrice();
 		},
-		changeCheckbox:function(index){
+		changeCheckbox:function(){
 			let list = app.checkboxList;
-			if(list[index].isChecked){
-				console.log('true');
-				//app.addList(index);
-			} else {
-				console.log('false');
-				//app.removeList(index);
+			for(var i in list){
+				if(!list[i].isChecked){
+					app.allCheckbox = false;
+					return;
+				} 
+				if(list[i].isChecked){
+					app.allCheckbox = true;
+				}
 			}
-			
-			app.allCheckboxCall(list);
 			app.getTotalPrice();
-			console.log(list);
 		},
 		changeAllCheckToggle:function(){
 			let list = app.checkboxList
-			app.allCheckboxCall(list);
-			app.getTotalPrice();
-		},
-		removeList:function(index){
-			let list = app.checkboxList;
-			list.splice(index, 1);
-			console.log(list);
-		},
-		addList:function(index){
-			let list = app.checkboxList;
-			list.splice(index, 1, order[index]);
-			console.log(list);
-		},
-		allCheckboxCall:function(list){
-		
 			if(app.allCheckbox){
 				for(var i in list){
 					list[i].isChecked = true;
@@ -123,12 +102,16 @@ var app = new Vue({
 					list[i].isChecked = false;
 				}
 			}
+			app.getTotalPrice();
 		},
 		submitOrder:function(){
 			var list = app.checkboxList;
 			var orderList = app.orders;
 			var orders = new Array();
+			console.log('orders 1 : ',orders);
+			
 			for(var i = 0; i < list.length; i++){
+				console.log(list[i].isChecked)
 				if(list[i].isChecked){
 				
 					let productNo = orderList[i].productNo
@@ -144,6 +127,12 @@ var app = new Vue({
 					orders.push(order);	
 				}
 			}
+			console.log('orders 2: ',orders);
+			if(orders == ''){
+				alert('상품을 1개 이상 선택해주세요');
+				return;
+			}
+			
 			var orderForm = new Object();
 			orderForm.orders = orders;
 			orderForm.userId = app.userInfo.id;
@@ -153,7 +142,6 @@ var app = new Vue({
 				headers:{'X-CSRF-TOKEN':metaToken}
 			})
 			.then(function(response){
-				console.log(response.data)
 				if(response.data.isSuccess == "success"){
 					location.href = '/order/complete';
 				} else {

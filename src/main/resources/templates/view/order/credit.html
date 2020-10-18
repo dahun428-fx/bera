@@ -16,8 +16,6 @@
 						<h5>회원님의 소중한 결제 감사합니다.</h5>
 						<p>언제나 고객님을 위해 최선을 다하겠습니다.</p>
 					</div>
-					<template v-for="(order, index) in orders">
-					
 					<form>
 						<div class="row orderlist">
 							<div class="col-12">
@@ -40,7 +38,7 @@
 									</thead>
 									<!-- 서버에서 장바구니 구현하기 -->
 									<tbody class="text-center">
-									
+										<template v-for="(order, index) in orders">
 										<tr>
 											<td class="align-middle">
 												<input type="checkbox" name="order"
@@ -74,8 +72,8 @@
 												</p>
 												<p></p>
 											</td>
-											
 										</tr>
+										</template>
 									</tbody>
 								</table>
 							</div>
@@ -181,7 +179,6 @@
 							@click="submitOrder" >결제하기</button>
 						</div>
 					</form>
-					</template>
 				</div>
 			</div>
 		</div>

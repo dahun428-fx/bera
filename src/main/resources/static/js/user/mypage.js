@@ -3,8 +3,8 @@
  */
 let metaToken = document.querySelector('meta[name="_csrf"]').content;
 
-var app = new Vue({
-	
+
+var app = new Vue({	
 	el:"#app",
 	data:{
 		user:{},
@@ -14,9 +14,12 @@ var app = new Vue({
 		list:[],
 		totalSize:0,
 		allCheckbox:true,
-		checkboxList:[]
+		checkboxList:[],
+		url:"ddddd"
 	},
 	beforeCreate:function(){
+		
+		
 		axios.get("/mypage/info",{
 			headers:{'X-CSRF-TOKEN':metaToken}
 		}).then(function(response){
@@ -32,7 +35,9 @@ var app = new Vue({
 			app.createCartList();
 			app.totalSizeSet(app.list);
 			app.addCheckboxList(app.list);
+			app.url = document.location.href.split('/')[4];
 		});
+		
 	},
 	filters:{
 		currency:function(value){
@@ -51,17 +56,17 @@ var app = new Vue({
 			const list = [];
 			for(var i in carts){
 				let obj = new Object();
-				obj.no = products[i].no;
+				obj.productNo = products[i].no;
 				obj.category = products[i].category;
 				obj.name = products[i].name;
 				obj.imagePath = images[i].imagePath;
-				obj.amount = carts[i].amount;
-				obj.price = products[i].price;
-				obj.discountPrice = products[i].discountPrice;
+				obj.orderProductAmount = carts[i].amount;
+				obj.productPrice = products[i].discountPrice;
 				obj.point = products[i].point
 				list.push(obj);
 			}
 			app.list = list;
+			console.log(app.list);
 		
 		},
 		totalSizeSet:function(list){
@@ -102,7 +107,33 @@ var app = new Vue({
 			}
 		},
 		selectedDelect:function(){
-			console.log(app.checkboxList);
+			let list = app.checkboxList;
+			let orders = new Array();
+			for(var i in list){
+				if(list[i].isChecked){
+					orders.push(list[i]);
+				}
+			}
+			console.log(orders);
+		},
+		selectedOrder:function(){
+			let list = app.checkboxList;
+			let orders = new Array();
+			for(var i in list){
+				if(list[i].isChecked){
+					orders.push(list[i].order);
+				}
+			}
+			var orderForm = new Object();
+			orderForm.orders = orders;
+			console.log(orderForm);
+			axios.post('/order/buy', orderForm, {
+				headers:{'X-CSRF-TOKEN':metaToken}
+			}).then(function(response){
+				if(response.data.isSuccess == 'success'){
+					location.href ='/order/credit';
+				}
+			})
 		}
 	}
 	
