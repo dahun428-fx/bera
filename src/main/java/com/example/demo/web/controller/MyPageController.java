@@ -7,12 +7,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.form.SearchForm;
 import com.example.demo.service.CartService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
@@ -40,32 +42,22 @@ public class MyPageController {
 		mav.setViewName("view/mypage/cart");
 		return mav;
 	}
-	@GetMapping("/info")
+	@PostMapping("/info")
 	@ResponseBody
-	public Map<String, Object> getInfo(){
-		
+	public Map<String, Object> getInfo(SearchForm searchForm){
 		Map<String, Object> resultMap = new HashMap<>();
 		User savedUser = userService.getLoginedUser();
-		System.out.println("savedUser : " + savedUser);
+		
 		Map<String, Object> param = new HashMap<>();
-		param.put("query", "getCartByUserId");
+		param.put("searchForm", searchForm);
 		param.put("userId", savedUser.getId());
-		
-		
-		List<Cart> cartList = (List<Cart>) cartService.list(param).get("list");
-		List<ProductDTO> productList = new ArrayList<>();
-		for(Cart cart : cartList) {
-			ProductDTO product = productService.get(cart.getProductNo());
-			productList.add(product);
-		}
-		List<ProductImage> imageList = new ArrayList<>();
-		for(ProductDTO dto : productList) {
-			imageList.add(dto.getProductImage());
-		}
-		resultMap.put("imageList", imageList);
-		resultMap.put("productList", productList);
-		resultMap.put("cartList", cartList);
+	
+		Map<String, Object> map = cartService.list(param);
+		resultMap.put("cartList", map.get("cartList"));
+		resultMap.put("productList", map.get("productList"));
+		resultMap.put("imageList", map.get("imageList"));
 		resultMap.put("userInfo", savedUser);
+		resultMap.put("pagination", map.get("pagination"));
 		return resultMap;
 	}
 }

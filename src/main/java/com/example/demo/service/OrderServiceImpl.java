@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dao.CartDao;
 import com.example.demo.dao.OrderDao;
+import com.example.demo.dao.PointDao;
 import com.example.demo.dao.ProductDao;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.form.OrderForm;
 import com.example.demo.vo.Order;
 import com.example.demo.vo.OrderDetail;
+import com.example.demo.vo.Point;
 import com.example.demo.vo.User;
 
 @Service
@@ -32,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private CartDao cartDao;
+	
+	@Autowired
+	private PointDao pointDao;
 	
 	@Transactional
 	public Map<String, Object> add(OrderForm orderForm) {
@@ -73,6 +78,12 @@ public class OrderServiceImpl implements OrderService {
 		if(orderForm.getOrderUsingPoint() > 0) {
 			savedUser.setPoint(savedUser.getPoint() - orderForm.getOrderUsingPoint());
 			userDao.updateUser(savedUser);
+
+			Point point = new Point();
+			point.setUserId(savedUser.getId());
+			point.setUsedPoint(orderForm.getOrderUsingPoint());
+			point.setUsedReason("상품 구매");
+			pointDao.insert(point);
 		}
 		//cart에서 주문시 cart 목록 제거
 		if("cart".equals(orderForm.getOrderType())) {

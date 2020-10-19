@@ -26,6 +26,9 @@
 				</when>
 			</choose>
 		</if>
+		<if test="pagination != null">
+		LIMIT #{pagination.beginIndex}, #{pagination.endIndex}
+		</if>
 	</select>
 	<select id="getCart" resultType="com.example.demo.vo.Cart">
 		SELECT 

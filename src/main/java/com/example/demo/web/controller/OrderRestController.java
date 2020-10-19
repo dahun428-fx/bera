@@ -35,7 +35,7 @@ import com.example.demo.vo.User;
 
 @RestController
 @RequestMapping("/order")
-@SessionAttributes({"ORDER_LIST","ORDER_FORM"})
+@SessionAttributes({"ORDER_FORM"})
 public class OrderRestController {
 	
 	@Autowired

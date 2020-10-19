@@ -16,32 +16,46 @@ var app = new Vue({
 		allCheckbox:true,
 		checkboxList:[],
 		url:"",
-		cartListIsEmpty:false
+		cartListIsEmpty:false,
+		pagination:{
+			pageNo:"",
+			totalPages:"",
+			beginPage:"",
+			endPage:"",
+			beginIndex:"",
+			endIndex:""
+		}
 	},
 	beforeCreate:function(){
 		
+		searchForm = new FormData();
+		searchForm.append('pageNo',1);
+		searchForm.append('rowsPerPage', 2);
+		searchForm.append('pagesPerBlock', 2);
+		searchForm.append('endIndex', 2);
 		
-		axios.get("/mypage/info",{
+		axios.post("/mypage/info", searchForm, {
 			headers:{'X-CSRF-TOKEN':metaToken}
 		}).then(function(response){
 			let userInfo = response.data.userInfo;
 			let cartList = response.data.cartList;
 			let productList = response.data.productList;
 			let imageList = response.data.imageList;
+			let pagination = response.data.pagination;
 			
 			app.user = userInfo;
 			app.carts = cartList;
 			app.products = productList;
 			app.images = imageList;
-			app.createCartList();
+			app.createCartList(app.carts, app.products, app.images);
 			app.totalSizeSet(app.list);
 			app.addCheckboxList(app.list);
 			app.url = document.location.href.split('/')[4];
-			
+			app.createPagination(pagination);
 			if(app.carts == ''){
 				app.cartListIsEmpty = true;
 			}
-			
+			console.log(pagination);
 		});
 		
 	},
@@ -55,10 +69,16 @@ var app = new Vue({
 		
 	},
 	methods:{
-		createCartList:function(){
-			let carts = app.carts;
-			let products = app.products;
-			let images = app.images;
+	
+		createPagination:function(pagination){
+			app.pagination.pageNo = pagination.pageNo;
+			app.pagination.totalPages = pagination.totalPages;
+			app.pagination.beginPage = pagination.beginPage;
+			app.pagination.endPage = pagination.endPage;
+			app.pagination.beginIndex = pagination.beginIndex;
+			app.pagination.endIndex = pagination.endIndex;
+		},
+		createCartList:function(carts, products, images){
 			const list = [];
 			for(var i in carts){
 				let obj = new Object();
@@ -72,8 +92,6 @@ var app = new Vue({
 				list.push(obj);
 			}
 			app.list = list;
-			console.log(app.list);
-		
 		},
 		totalSizeSet:function(list){
 			app.totalSize = list.length;
@@ -139,6 +157,24 @@ var app = new Vue({
 			}).then(function(response){
 				if(response.data.isSuccess == 'success'){
 					location.href ='/order/credit';
+				}
+			})
+		},
+		selectedOneOrder:function(index){
+			let list = app.checkboxList;
+			let order = list[index].order;
+			let orders = new Array();
+	
+			orders.push(order);
+			var orderForm = new Object();
+			orderForm.orders = orders;
+			orderForm.orderType = "cart";
+			
+			axios.post('/order/buy', orderForm,{
+				headers:{'X-CSRF-TOKEN':metaToken}
+			}).then(function(response){
+				if(response.data.isSuccess == 'success'){
+					location.href = '/order/credit';
 				}
 			})
 		}
