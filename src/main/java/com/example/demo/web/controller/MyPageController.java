@@ -51,6 +51,7 @@ public class MyPageController {
 		param.put("query", "getCartByUserId");
 		param.put("userId", savedUser.getId());
 		
+		
 		List<Cart> cartList = (List<Cart>) cartService.list(param).get("list");
 		List<ProductDTO> productList = new ArrayList<>();
 		for(Cart cart : cartList) {
