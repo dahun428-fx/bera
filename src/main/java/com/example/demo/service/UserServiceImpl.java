@@ -38,13 +38,11 @@ public class UserServiceImpl implements UserService {
 	public User getLoginedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User savedUser = (User) authentication.getPrincipal();
-		User newUser = new User();
-		newUser.setName(savedUser.getName());
-		newUser.setId(savedUser.getId());
-		newUser.setPhone(savedUser.getPhone());
-		newUser.setEmail(savedUser.getEmail());
-		newUser.setPoint(savedUser.getPoint());
-		return newUser;
+		Map<String, Object> param = new HashMap<>();
+		param.put("query", "getUserById");
+		param.put("userId", savedUser.getId());
+		
+		return 	userDao.getUser(param);
 	}
 	/**
 	 * 지정된 사용자 아이디에 해당하는 사용자 정보를 반환한다.

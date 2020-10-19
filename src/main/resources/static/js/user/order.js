@@ -14,6 +14,7 @@ var app = new Vue({
 		totalPay:0,
 		allCheckbox:true,
 		checkboxList:[],
+		orderType:""
 	},
 	beforeCreate:function(){
 		axios.get('/order/products',{
@@ -21,6 +22,8 @@ var app = new Vue({
 		}).then(function(response){
 			const userInfo = response.data.userInfo;
 			const orderList = response.data.orderList;
+			const orderType = response.data.orderType;
+			
 			if(orderList == null) {
 				alert('유효하지 않은 접근입니다. 다시 시도해주세요');
 				location.href = '/';
@@ -29,7 +32,9 @@ var app = new Vue({
 
 			app.userInfo = userInfo;
 			app.orders = orderList;
+			app.orderType = orderType;
 			app.addCheckboxList(app.orders);
+			console.log(app.orderType);
 		})
 	},
 	filters:{
@@ -138,6 +143,8 @@ var app = new Vue({
 			orderForm.userId = app.userInfo.id;
 			orderForm.orderUsingPoint = app.usePoint;
 			orderForm.orderPayment = app.totalPay;
+			orderForm.orderType = app.orderType;
+			
 			axios.post("/order/addOrder",orderForm,{
 				headers:{'X-CSRF-TOKEN':metaToken}
 			})

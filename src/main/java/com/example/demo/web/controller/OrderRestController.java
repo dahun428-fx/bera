@@ -35,7 +35,7 @@ import com.example.demo.vo.User;
 
 @RestController
 @RequestMapping("/order")
-@SessionAttributes({"ORDER_LIST"})
+@SessionAttributes({"ORDER_LIST","ORDER_FORM"})
 public class OrderRestController {
 	
 	@Autowired
@@ -63,7 +63,7 @@ public class OrderRestController {
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		List<Order> orders = orderForm.getOrders();
-		model.addAttribute("ORDER_LIST", orders);
+		model.addAttribute("ORDER_FORM", orderForm);
 		if(!orders.isEmpty()) {
 			resultMap.put("isSuccess", "success");
 		} else {
@@ -91,8 +91,9 @@ public class OrderRestController {
 	@GetMapping("/products")
 	public Map<String, Object> credit(HttpSession session){
 		Map<String, Object> resultMap = new HashMap<>();
-		List<Order> orders = (List<Order>) session.getAttribute("ORDER_LIST");
-		System.out.println("orderlist : "+orders);
+		OrderForm orderForm = (OrderForm)session.getAttribute("ORDER_FORM");
+		List<Order> orders = orderForm.getOrders();
+		
 		List<OrderDTO> orderList = new ArrayList<>();
 		
 		for(Order order : orders) {
@@ -111,6 +112,7 @@ public class OrderRestController {
 	
 		resultMap.put("userInfo", userService.getLoginedUser());
 		resultMap.put("orderList", orderList);
+		resultMap.put("orderType", orderForm.getOrderType());
 		
 		return resultMap;
 	}

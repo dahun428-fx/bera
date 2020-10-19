@@ -46,10 +46,11 @@ public class MyPageController {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		User savedUser = userService.getLoginedUser();
-		
+		System.out.println("savedUser : " + savedUser);
 		Map<String, Object> param = new HashMap<>();
 		param.put("query", "getCartByUserId");
 		param.put("userId", savedUser.getId());
+		
 		List<Cart> cartList = (List<Cart>) cartService.list(param).get("list");
 		List<ProductDTO> productList = new ArrayList<>();
 		for(Cart cart : cartList) {

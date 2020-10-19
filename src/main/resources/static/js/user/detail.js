@@ -23,7 +23,7 @@ var app = new Vue({
 		order:{
 			count:1,
 			totalPrice : 0,
-			type:"noBasket"
+			type:"noCart"
 		}
 	},
 	beforeCreate:function(){

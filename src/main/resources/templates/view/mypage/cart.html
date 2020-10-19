@@ -52,6 +52,13 @@
 										</thead>
 										<!-- 서버에서 장바구니 구현하기 -->
 										<tbody>
+											<tr v-if="cartListIsEmpty">
+												<td
+												colspan="7" 
+												class="mt-2 align-middle">
+													<p>장바구니에 추가된 상품이 없습니다.</p>
+												</td>
+											</tr>
 											<template v-for="(cart, index) in list">
 											<tr>
 												<td class="align-middle">

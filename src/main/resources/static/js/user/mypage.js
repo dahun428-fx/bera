@@ -15,7 +15,8 @@ var app = new Vue({
 		totalSize:0,
 		allCheckbox:true,
 		checkboxList:[],
-		url:"ddddd"
+		url:"",
+		cartListIsEmpty:false
 	},
 	beforeCreate:function(){
 		
@@ -36,6 +37,11 @@ var app = new Vue({
 			app.totalSizeSet(app.list);
 			app.addCheckboxList(app.list);
 			app.url = document.location.href.split('/')[4];
+			
+			if(app.carts == ''){
+				app.cartListIsEmpty = true;
+			}
+			
 		});
 		
 	},
@@ -126,6 +132,7 @@ var app = new Vue({
 			}
 			var orderForm = new Object();
 			orderForm.orders = orders;
+			orderForm.orderType = "cart";
 			console.log(orderForm);
 			axios.post('/order/buy', orderForm, {
 				headers:{'X-CSRF-TOKEN':metaToken}

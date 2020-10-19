@@ -16,4 +16,6 @@ public interface CartDao {
 	Cart getCart(@Param("productNo") int productNo, 
 						@Param("userId") String userId);
 	void updateAmount(Cart cart);
+	void delete(@Param("productNo") int productNo, 
+			@Param("userId") String userId);
 }

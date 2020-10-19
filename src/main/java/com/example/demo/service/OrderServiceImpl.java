@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.dao.CartDao;
 import com.example.demo.dao.OrderDao;
 import com.example.demo.dao.ProductDao;
 import com.example.demo.dao.UserDao;
@@ -29,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private CartDao cartDao;
+	
 	@Transactional
 	public Map<String, Object> add(OrderForm orderForm) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -43,6 +47,15 @@ public class OrderServiceImpl implements OrderService {
 			resultMap.put("msg", "잘못된 접근입니다. 다시 입력해주세요");
 			return resultMap;
 		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("query", "getUserById");
+		param.put("userId", orderForm.getUserId());
+		User savedUser = userDao.getUser(param);
+		if(savedUser == null) {
+			resultMap.put("isSuccess", "fail");
+			resultMap.put("msg", "해당 유저 정보가 없습니다.");
+			return resultMap;
+		}
 		
 		//orderList get
 		List<Order> orders = orderForm.getOrders();
@@ -54,6 +67,20 @@ public class OrderServiceImpl implements OrderService {
 		orderDetail.setOrderPayment(orderForm.getOrderPayment());
 		orderDao.insertOrderMain(orderDetail);
 		
+		//user point 사용시 제거
+		System.out.println("point :" + orderForm.getOrderUsingPoint());
+		System.out.println("user : " + savedUser);
+		if(orderForm.getOrderUsingPoint() > 0) {
+			savedUser.setPoint(savedUser.getPoint() - orderForm.getOrderUsingPoint());
+			userDao.updateUser(savedUser);
+		}
+		//cart에서 주문시 cart 목록 제거
+		if("cart".equals(orderForm.getOrderType())) {
+			for(Order order : orders) {
+				cartDao.delete(order.getProductNo(), savedUser.getId());
+			}
+		}
+		
 		//결제된 order product Point user 에 save
 		int savedPoint = 0;
 		for(Order order : orders) {
@@ -62,15 +89,11 @@ public class OrderServiceImpl implements OrderService {
 			savedPoint += product.getPoint();
 			orderDao.insertOrderSub(order);
 		}
+		System.out.println("savedPoint : " + savedPoint);
 
 		//user객체를 찾아서 update
-		Map<String, Object> param = new HashMap<>();
-		param.put("query", "getUserById");
-		param.put("userId", orderForm.getUserId());
-		
-		User user = userDao.getUser(param);
-		user.setPoint(savedPoint);
-		userDao.updateUser(user);
+		savedUser.setPoint(savedUser.getPoint() + savedPoint);
+		userDao.updateUser(savedUser);
 
 		resultMap.put("isSuccess", "success");
 		resultMap.put("msg", "주문 완료 되었습니다.");

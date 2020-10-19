@@ -51,4 +51,12 @@
 		AND 
 			user_id = #{userId}	
 	</update>
+	<delete id="delete">
+		DELETE FROM 
+			br_shopping_basket
+		WHERE
+			product_no = #{productNo}
+		AND 
+			user_id = #{userId}
+	</delete>
 </mapper>
