@@ -80,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
 			userDao.updateUser(savedUser);
 
 			Point point = new Point();
+			point.setOrderNo(orderDetail.getOrderNo());
 			point.setUserId(savedUser.getId());
 			point.setUsedPoint(orderForm.getOrderUsingPoint());
 			point.setUsedReason("상품 구매");

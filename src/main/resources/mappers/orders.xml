@@ -17,4 +17,40 @@
 		VALUES
 		(#{no}, #{productNo}, #{productPrice}, #{orderProductAmount})
 	</insert>
+	<select id="getOrderByNo" parameterType="int" resultType="com.example.demo.vo.Order">
+		SELECT
+			order_no 				as "no",
+			product_no 				as "productNo",
+			product_price 			as "productPrice",
+			order_product_amount 	as "orderProductAmount"			
+		FROM
+			br_order_sub
+		WHERE	
+			order_no = #{value}
+	</select>
+	<select id="getOrderDetail" parameterType="map" resultType="com.example.demo.vo.OrderDetail">
+	
+		SELECT
+			order_no 				as "no",
+			user_id 				as "userId",
+			order_using_point 		as "orderUsingPoint",
+			order_payment 			as "orderPayment",
+			reg_date 				as "regDate",
+			completed 
+		FROM
+			br_order_main
+		<if test="query != null">
+			<choose>
+				<when test="query == 'getOrderByUserId'">
+					<where>
+						user_id IN (#{userId})
+					</where>
+				
+				</when>
+				
+			</choose>
+			ORDER BY reg_date DESC
+		</if>	
+		
+	</select>
 </mapper>

@@ -67,10 +67,10 @@ public class CartServiceImpl implements CartService {
 		Map<String, Object> param = new HashMap<>();
 		param.put("query", "getCartByUserId");
 		param.put("userId", map.get("userId"));
-		param.put("searchForm", map.get("searchForm"));
+		//param.put("searchForm", map.get("searchForm"));
 		
-		Pagination pagination = this.getPagination(param);
-		param.put("pagination", pagination);
+		//Pagination pagination = this.getPagination(param);
+		//param.put("pagination", pagination);
 		
 		List<Cart> cartList = cartDao.getAllCarts(param);
 		List<ProductDTO> productList = new ArrayList<>();
@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
 		resultMap.put("cartList", cartList);
 		resultMap.put("productList", productList);
 		resultMap.put("imageList", imageList);
-		resultMap.put("pagination", pagination);
+		//resultMap.put("pagination", pagination);
 		return resultMap;
 	}
 

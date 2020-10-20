@@ -7,6 +7,7 @@ public class Point {
 	private double usedPoint;
 	private Date usedDate;
 	private String usedReason;
+	private int orderNo;
 	
 	public Point() {
 	}
@@ -43,11 +44,20 @@ public class Point {
 		this.usedReason = usedReason;
 	}
 
+	public int getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
+
 	@Override
 	public String toString() {
 		return "Point [userId=" + userId + ", usedPoint=" + usedPoint + ", usedDate=" + usedDate + ", usedReason="
-				+ usedReason + "]";
+				+ usedReason + ", orderNo=" + orderNo + "]";
 	}
 
+	
 	
 }

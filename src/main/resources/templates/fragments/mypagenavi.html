@@ -2,8 +2,9 @@
 <html lang="utf-8" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="mypagenaviFragment">
 	<ul class="nav nav-tabs nav-justified mt-3 mb-3">
-		<li class="nav-item"><a href="mypage-point.jsp"
-			class="nav-link" >포인트</a></li>
+		<li class="nav-item"><a href="/mypage/point"
+			class="nav-link"
+			:class="(url == 'point') ? 'active' : '' " >포인트</a></li>
 		<li class="nav-item"><a href="/mypage/cart"
 			class="nav-link"
 			:class="(url == 'cart') ? 'active' : '' "

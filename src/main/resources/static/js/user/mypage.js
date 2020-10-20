@@ -28,20 +28,14 @@ var app = new Vue({
 	},
 	beforeCreate:function(){
 		
-		searchForm = new FormData();
-		searchForm.append('pageNo',1);
-		searchForm.append('rowsPerPage', 2);
-		searchForm.append('pagesPerBlock', 2);
-		searchForm.append('endIndex', 2);
-		
-		axios.post("/mypage/info", searchForm, {
+		axios.get("/mypage/info", {
 			headers:{'X-CSRF-TOKEN':metaToken}
 		}).then(function(response){
 			let userInfo = response.data.userInfo;
 			let cartList = response.data.cartList;
 			let productList = response.data.productList;
 			let imageList = response.data.imageList;
-			let pagination = response.data.pagination;
+			//let pagination = response.data.pagination;
 			
 			app.user = userInfo;
 			app.carts = cartList;
@@ -51,12 +45,20 @@ var app = new Vue({
 			app.totalSizeSet(app.list);
 			app.addCheckboxList(app.list);
 			app.url = document.location.href.split('/')[4];
-			app.createPagination(pagination);
+			//app.createPagination(pagination);
 			if(app.carts == ''){
 				app.cartListIsEmpty = true;
 			}
-			console.log(pagination);
 		});
+		axios.get("/mypage/points",{
+			headers:{'X-CSRF-TOKEN':metaToken}
+		}).then(function(response){
+			let pointList = response.data.pointList;
+			let pointOrder = response.data.pointOrder;
+			let orderCount = response.data.orderCount;
+			
+			console.log(pointList, pointOrder, orderCount);
+		})
 		
 	},
 	filters:{
@@ -69,7 +71,6 @@ var app = new Vue({
 		
 	},
 	methods:{
-	
 		createPagination:function(pagination){
 			app.pagination.pageNo = pagination.pageNo;
 			app.pagination.totalPages = pagination.totalPages;

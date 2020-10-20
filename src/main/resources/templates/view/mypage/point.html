@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="utf-8" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<div layout:fragment="body" class="body" id="app">
+			<div class="container mt-5">
+				<div class="content-header text-center">
+					<h1 class="display-4">MY PAGE</h1>
+					<p>
+						<strong>회원님을 위한 베스킨라빈스의 다양한 정보</strong>
+					</p>
+				</div>
+				<div class="custom-content-box">
+					<hr />
+					<div class="mypage-nav">
+						<div class="col-12">
+							<div th:replace="fragments/mypagenavi :: mypagenaviFragment"></div>
+						</div>
+					</div>
+					<div class="row content-header text-center mt-5 mb-5">
+						<!-- mypoint content start -->
+						<div class="col-9 custom-border-right">
+							<h2 class="text-info">안녕하세요 {{user.name}}님</h2>
+						</div>
+						<div class="col-3">
+							<h5>사용가능 총 포인트</h5>
+							<span class="text-primary">{{user.point | currency}}p</span>
+						</div>
+						<!-- mypoint coatent end -->
+					</div>
+					<div class="row content-header">
+						<div class="col-12">
+							<h4 class="color-pink">나의 포인트 <span class="badge badge-pill badge-dark"><%=NumberUtil.numberWithComma(user.getPoint()) %> 점</span></h4>
+							<hr />
+							<div class="my-point-table">
+
+								<table class="table">
+									<thead>
+										<tr>
+											<th>주문번호</th>
+											<th>상품</th>
+											<th>수량</th>
+											<th>구매가격</th>
+											<th>사용한 포인트</th>
+											<th>사용일자</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td colspan="4" class="text-center">사용 내역이 없습니다.</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td><%=pointUse.getReason() %></td>
+											<td><%=pointUse.getPoint() %></td>
+											<td><%=pointUse.getUsedDate() %></td>
+										</tr>
+									</tbody>
+								</table>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<th:block layout:fragment="script">
+	<script src="/static/js/user/mypage.js"></script>
+</th:block>

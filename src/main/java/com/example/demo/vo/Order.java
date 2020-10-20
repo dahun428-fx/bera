@@ -7,7 +7,7 @@ public class Order {
 	private int productPrice;
 	private int orderProductAmount;
 	
-	public Order() {
+	public Order() {	
 	}
 
 	public int getNo() {

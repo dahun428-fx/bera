@@ -4,9 +4,21 @@
 <mapper namespace="com.example.demo.dao.PointDao">
 	<insert id="insert" parameterType="com.example.demo.vo.Point">
 		INSERT INTO br_users_pointuse
-		(user_id, used_point, used_reason)
+		(user_id, used_point, used_reason, order_no)
 		VALUES
-		(#{userId}, #{usedPoint}, #{usedReason})
+		(#{userId}, #{usedPoint}, #{usedReason}, #{orderNo})
 	</insert>
+	<select id="get" parameterType="string" resultType="com.example.demo.vo.Point">
+		SELECT 
+			user_id 		as "userId", 
+			used_point 		as "usedPoint",
+			used_date 		as "usedDate",
+			used_reason 	as "usedReason",
+			order_no 		as "orderNo"
+		FROM
+			br_users_pointuse
+		WHERE
+			user_id = #{value}
+	</select>
 
 </mapper>
