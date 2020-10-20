@@ -30,7 +30,7 @@
 					</div>
 					<div class="row content-header">
 						<div class="col-12">
-							<h4 class="color-pink">나의 포인트 <span class="badge badge-pill badge-dark"><%=NumberUtil.numberWithComma(user.getPoint()) %> 점</span></h4>
+							<h4 class="color-pink">나의 포인트 <span class="badge badge-pill badge-dark">{{user.point | currency }} 점</span></h4>
 							<hr />
 							<div class="my-point-table">
 
@@ -46,17 +46,19 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
+										<tr v-if="pointObj.pointList == null">
 											<td colspan="4" class="text-center">사용 내역이 없습니다.</td>
 										</tr>
+										<template v-for="point in pointObj.pointList">
 										<tr>
-											<td></td>
+											<td>{{point.orderNo}}</td>
 											<td></td>
 											<td></td>
 											<td><%=pointUse.getReason() %></td>
 											<td><%=pointUse.getPoint() %></td>
 											<td><%=pointUse.getUsedDate() %></td>
 										</tr>
+										</template>
 									</tbody>
 								</table>
 								

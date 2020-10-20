@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.OrderDao;
 import com.example.demo.dao.PointDao;
 import com.example.demo.dao.UserDao;
+import com.example.demo.vo.Order;
 import com.example.demo.vo.OrderDetail;
 import com.example.demo.vo.Point;
 import com.example.demo.vo.User;
@@ -42,17 +44,20 @@ public class PointServiceImpl implements PointService {
 		}
 		//포인트 내역
 		List<Point> points = pointDao.get(userId);
+		//주문내역
+		List<Order> orders = new ArrayList<>();
+		for(Point point : points) {
+			Order order = orderDao.getOrderByNo(point.getOrderNo());
+			orders.add(order);
+		}
 		
-		//주문 내역
-		param.put("query", "getOrderByUserId");
-		OrderDetail order = orderDao.getOrderDetail(param);
 		
 		//주문 수량
-		int orderCount = orderDao.getOrderByNo(order.getOrderNo()).size();
+		int orderCount = orders.size();
 		
 		resultMap.put("isSuccess", "success");
 		resultMap.put("pointList", points);
-		resultMap.put("pointOrder", order);
+		resultMap.put("pointOrder", orders);
 		resultMap.put("orderCount", orderCount);
 		
 		return resultMap;

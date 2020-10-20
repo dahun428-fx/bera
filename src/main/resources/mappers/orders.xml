@@ -31,7 +31,7 @@
 	<select id="getOrderDetail" parameterType="map" resultType="com.example.demo.vo.OrderDetail">
 	
 		SELECT
-			order_no 				as "no",
+			order_no 				as "orderNo",
 			user_id 				as "userId",
 			order_using_point 		as "orderUsingPoint",
 			order_payment 			as "orderPayment",
@@ -47,7 +47,11 @@
 					</where>
 				
 				</when>
-				
+				<when test="query == 'getOrderByOrderNo'">
+					<where>
+						order_no IN (#{orderNo})
+					</where>
+				</when>
 			</choose>
 			ORDER BY reg_date DESC
 		</if>	

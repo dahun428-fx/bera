@@ -24,6 +24,11 @@ var app = new Vue({
 			endPage:"",
 			beginIndex:"",
 			endIndex:""
+		},
+		pointObj:{
+			pointList:[],
+			pointOrder:[],
+			orderCount:0
 		}
 	},
 	beforeCreate:function(){
@@ -56,8 +61,10 @@ var app = new Vue({
 			let pointList = response.data.pointList;
 			let pointOrder = response.data.pointOrder;
 			let orderCount = response.data.orderCount;
-			
-			console.log(pointList, pointOrder, orderCount);
+			app.pointObj.pointList = pointList;
+			app.pointObj.pointOrder = pointOrder;
+			app.pointObj.orderCount = orderCount;
+			console.log(app.pointObj);
 		})
 		
 	},

@@ -2,9 +2,12 @@ package com.example.demo.vo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Point {
 	private String userId;
 	private double usedPoint;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date usedDate;
 	private String usedReason;
 	private int orderNo;
