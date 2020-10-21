@@ -62,9 +62,9 @@ var app = new Vue({
 			let pointOrder = response.data.pointOrder;
 			let orderCount = response.data.orderCount;
 			app.pointObj.pointList = pointList;
-			app.pointObj.pointOrder = pointOrder;
+			app.pointObj.pointOrder = pointOrder;	
 			app.pointObj.orderCount = orderCount;
-			console.log(app.pointObj);
+			app.createPointProductList(app.pointObj.pointOrder);
 		})
 		
 	},
@@ -78,6 +78,14 @@ var app = new Vue({
 		
 	},
 	methods:{
+		createPointProductList:function(pointOrderList){
+			var list = pointOrderList;
+			var array = new Array();
+			for(var i in list){
+				array.push(list[i]);
+			}
+			console.log(array);
+		},
 		createPagination:function(pagination){
 			app.pagination.pageNo = pagination.pageNo;
 			app.pagination.totalPages = pagination.totalPages;

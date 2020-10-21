@@ -44,11 +44,14 @@ public class PointServiceImpl implements PointService {
 		}
 		//포인트 내역
 		List<Point> points = pointDao.get(userId);
+		
 		//주문내역
 		List<Order> orders = new ArrayList<>();
 		for(Point point : points) {
-			Order order = orderDao.getOrderByNo(point.getOrderNo());
-			orders.add(order);
+			List<Order> orderList = orderDao.getOrderByNo(point.getOrderNo());
+			for(Order order : orderList) {
+				orders.add(order);
+			}
 		}
 		
 		

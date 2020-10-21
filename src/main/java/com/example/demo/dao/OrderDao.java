@@ -13,6 +13,6 @@ public interface OrderDao {
 
 	void insertOrderSub(Order order);
 	void insertOrderMain(OrderDetail orderDetail);
-	Order getOrderByNo(int orderNo);
+	List<Order> getOrderByNo(int orderNo);
 	List<OrderDetail> getOrderDetail(Map<String, Object> param);
 }
